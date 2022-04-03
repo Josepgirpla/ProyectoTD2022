@@ -1,0 +1,10 @@
+---
+title: "ProyectoTD2022"
+author: "Grupo D"
+date: "3/4/2022"
+output: html_document
+---
+
+```{r}
+
+```
