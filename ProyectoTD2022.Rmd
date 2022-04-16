@@ -2,9 +2,23 @@
 title: "ProyectoTD2022"
 author: "Grupo D"
 date: "3/4/2022"
-output: html_document
+output:
+  html_document:
+    echo: yes
+    number_sections: yes
+    theme: lumen
+    toc: yes
 ---
 
-```{r}
+```{r echo = F, message = F, warning = F}
+library(knitr)
+opts_chunk$set(echo=T, message = F, error = T, warning = T, comment = NA, fig.align = 'center', dpi = 200, tidy = F, cache.path = '.cache/', fig.path = './figura/')
 
+packages = c("tidyverse")
+package.check <- lapply(packages, FUN = function(x) {
+  if (!require(x, character.only = TRUE)) {
+    install.packages(x, dependencies = TRUE,repos='http://cran.rediris.es')
+  }
+  library(x, character.only = TRUE)
+})
 ```
