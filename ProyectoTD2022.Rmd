@@ -6,6 +6,48 @@ output: html_document
 ---
 
 ```{r}
-Cadiz_3 <- read_csv("./data/Cadiz_3.csv", 
-    col_types = cols(dateObserved = col_date(format = "%Y-%m-%d")))
+#Cargamos la libreria necesaria
+library(readr)
+
+Cadiz_3 <- read_csv("data/Cadiz_3.csv",
+                    col_types = cols(dateObserved = col_date(format = "%Y-%m-%d")))
+
+Cadiz_16 <- read_csv("data/Cadiz_16.csv",
+                    col_types = cols(dateObserved = col_date(format = "%Y-%m-%d")))
+
+Carles_Cervera_34 <- read_csv("data/Carles_Cervera_34.csv",
+                    col_types = cols(dateObserved = col_date(format = "%Y-%m-%d")))
+
+Carles_Cervera_Chaflan_Reina_Dona_Maria <- read_csv("data/Carles_Cervera_Chaflan_Reina_Dona_Maria.csv",
+                    col_types = cols(dateObserved = col_date(format = "%Y-%m-%d")))
+
+Cuba_3 <- read_csv("data/Cuba_3.csv",
+                    col_types = cols(dateObserved = col_date(format = "%Y-%m-%d")))
+
+Doctor_Serrano_21 <- read_csv("data/Doctor_Serrano_21.csv",
+                    col_types = cols(dateObserved = col_date(format = "%Y-%m-%d")))
+
+General_Prim_Chaflan_Donoso_Cortes <- read_csv("data/General_Prim_Chaflan_Donoso_Cortes.csv",
+                    col_types = cols(dateObserved = col_date(format = "%Y-%m-%d")))
+
+Puerto_Rico_21 <- read_csv("data/Puerto_Rico_21.csv",
+                    col_types = cols(dateObserved = col_date(format = "%Y-%m-%d")))
+
+Salvador_Abril_Chaflan_Maestro_Jose_Serrano <- read_csv("data/Salvador_Abril_Chaflan _Maestro_Jose_Serrano.csv",
+                    col_types = cols(dateObserved = col_date(format = "%Y-%m-%d")))
+
+Sueca_2 <- read_csv("data/Sueca_2.csv",
+                    col_types = cols(dateObserved = col_date(format = "%Y-%m-%d")))
+
+Sueca_32 <- read_csv("data/Sueca_32.csv",
+                    col_types = cols(dateObserved = col_date(format = "%Y-%m-%d")))
+
+Sueca_61 <- read_csv("data/Sueca_61.csv",
+                    col_types = cols(dateObserved = col_date(format = "%Y-%m-%d")))
+
+Sueca_Esq_Denia <- read_csv("data/Sueca_Esq_Denia.csv",
+                    col_types = cols(dateObserved = col_date(format = "%Y-%m-%d")))
+
+Vivons_Chaflan_Cadiz <- read_csv("data/Vivons_Chaflan_Cadiz.csv",
+                    col_types = cols(dateObserved = col_date(format = "%Y-%m-%d")))
 ```
