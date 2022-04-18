@@ -6,5 +6,6 @@ output: html_document
 ---
 
 ```{r}
-
+Cadiz_3 <- read_csv("./data/Cadiz_3.csv", 
+    col_types = cols(dateObserved = col_date(format = "%Y-%m-%d")))
 ```
