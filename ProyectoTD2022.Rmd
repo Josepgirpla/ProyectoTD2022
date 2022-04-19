@@ -5,9 +5,33 @@ date: "3/4/2022"
 output: html_document
 ---
 
+Limpiamos el entorno de trabajo antes de comenzar a trabajar.
 ```{r}
-#Cargamos la libreria necesaria
-library(readr)
+rm(list = ls())
+```
+
+
+
+Cargamos las librerias necesarias.
+```{r}
+#Cargamos todas las librerias necesarias para trabajar.
+packages=c("tidyverse", "knitr", "ggplot2", "datasets", "RColorBrewer", "dplyr", "readr", "tidyr")
+# use this function to check if each package is on the local machine
+# if a package is installed, it will be loaded
+# if any are not, the missing package(s) will be installed and loaded
+package.check <- lapply(packages, FUN=function(x) {
+  if (!require(x, character.only=TRUE)) {
+    install.packages(x, dependencies=TRUE,repos='http://cran.rediris.es')
+    library(x, character.only=TRUE)
+  }
+})
+# verify they are loaded
+search()
+```
+
+
+```{r}
+
 
 Cadiz_3 <- read_csv("data/Cadiz_3.csv",
                     col_types = cols(dateObserved = col_date(format = "%Y-%m-%d")))
@@ -51,3 +75,54 @@ Sueca_Esq_Denia <- read_csv("data/Sueca_Esq_Denia.csv",
 Vivons_Chaflan_Cadiz <- read_csv("data/Vivons_Chaflan_Cadiz.csv",
                     col_types = cols(dateObserved = col_date(format = "%Y-%m-%d")))
 ```
+
+Manipulamos los datos para obtener un solo dataframe bien estructurado.
+```{r}
+#Añadimos una columna que contenga el nombre de la calle para poder identificarlas despues.
+Cadiz_16 <- cbind(Cadiz_16, Nombre_calle = c("Cadiz_16"))
+
+Cadiz_3 <- cbind(Cadiz_3, Nombre_calle = c("Cadiz_3"))
+
+Carles_Cervera_34 <- cbind(Carles_Cervera_34, Nombre_calle = c("Carles_Cervera_34"))
+
+Carles_Cervera_Chaflan_Reina_Dona_Maria <- cbind(Carles_Cervera_Chaflan_Reina_Dona_Maria,
+                                                 Nombre_calle = c("Carles_Cervera_Chaflan_Reina_Dona_Maria"))
+
+Cuba_3 <- cbind(Cuba_3, Nombre_calle = c("Cuba_3"))
+
+Doctor_Serrano_21 <- cbind(Doctor_Serrano_21, Nombre_calle = c("Doctor_Serrano_21"))
+
+General_Prim_Chaflan_Donoso_Cortes <- cbind(General_Prim_Chaflan_Donoso_Cortes,
+                                            Nombre_calle = c("General_Prim_Chaflan_Donoso_Cortes"))
+
+Puerto_Rico_21 <- cbind(Puerto_Rico_21, Nombre_calle = c("Puerto_Rico_21"))
+
+Salvador_Abril_Chaflan_Maestro_Jose_Serrano <-cbind(Salvador_Abril_Chaflan_Maestro_Jose_Serrano,
+                                                    Nombre_calle = c("Salvador_Abril_Chaflan_Maestro_Jose_Serrano"))
+
+Sueca_2 <- cbind(Sueca_2, Nombre_calle = c("Sueca_2"))
+
+Sueca_32 <- cbind(Sueca_32, Nombre_calle = c("Sueca_32"))
+
+Sueca_61 <- cbind(Sueca_61, Nombre_calle = c("Sueca_61"))
+
+Sueca_Esq_Denia <- cbind(Sueca_Esq_Denia, Nombre_calle = c("Sueca_Esq_Denia"))
+
+Vivons_Chaflan_Cadiz <- cbind(Vivons_Chaflan_Cadiz, Nombre_calle = c("Vivons_Chaflan_Cadiz"))
+
+
+
+#Unimos todos los df en uno solo.
+df <- rbind(Cadiz_16, Cadiz_3, Carles_Cervera_34, Carles_Cervera_Chaflan_Reina_Dona_Maria,
+            Cuba_3, Doctor_Serrano_21, General_Prim_Chaflan_Donoso_Cortes, Puerto_Rico_21,
+            Salvador_Abril_Chaflan_Maestro_Jose_Serrano, Sueca_2, Sueca_32, Sueca_61,
+            Sueca_Esq_Denia, Vivons_Chaflan_Cadiz)
+
+#Modificamos los nombres de las columnas por unos más representativos.
+colnames(df) <- c("Id", "Fecha_registro", "Servicio_sensor", "Tipo_entidad_sensor", "Id_sensor",
+                  "Nivel_sonoro_continuo_equivalente", "Nivel_sonoro_dia",
+                  "Nivel_sonoro_dia_tarde_noche", "Nivel_sonoro_tarde",
+                  "Nivel_sonoro_noche", "Dia_medicion", "Nombre_calle")
+
+```
+
