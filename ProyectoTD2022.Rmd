@@ -10,7 +10,6 @@ output:
     toc: yes
 ---
 
-<<<<<<< HEAD
 ```{r echo = F, message = F, warning = F}
 library(knitr)
 opts_chunk$set(echo=T, message = F, error = T, warning = T, comment = NA, fig.align = 'center', dpi = 200, tidy = F, cache.path = '.cache/', fig.path = './figura/')
@@ -22,15 +21,16 @@ package.check <- lapply(packages, FUN = function(x) {
   }
   library(x, character.only = TRUE)
 })
-=======
+```
+
 Limpiamos el entorno de trabajo antes de comenzar a trabajar.
+
 ```{r}
 rm(list = ls())
 ```
 
-
-
 Cargamos las librerias necesarias.
+
 ```{r}
 #Cargamos todas las librerias necesarias para trabajar.
 packages=c("tidyverse", "knitr", "ggplot2", "datasets", "RColorBrewer", "dplyr", "readr", "tidyr")
@@ -60,7 +60,7 @@ Cadiz_16 <- read_csv("data/Cadiz_16.csv",
 Carles_Cervera_34 <- read_csv("data/Carles_Cervera_34.csv",
                     col_types = cols(dateObserved = col_date(format = "%Y-%m-%d")))
 
-Carles_Cervera_Chaflan_Reina_Dona_Maria <- read_csv("data/Carles_Cervera_Chaflan_Reina_Dona_Maria.csv",
+Carles_Cervera_Chaflan_Reina_Dona_Maria <- read_csv("data/Carles_Cervera_Chaflan_Reina_Doña_Maria.csv",
                     col_types = cols(dateObserved = col_date(format = "%Y-%m-%d")))
 
 Cuba_3 <- read_csv("data/Cuba_3.csv",
@@ -92,10 +92,10 @@ Sueca_Esq_Denia <- read_csv("data/Sueca_Esq_Denia.csv",
 
 Vivons_Chaflan_Cadiz <- read_csv("data/Vivons_Chaflan_Cadiz.csv",
                     col_types = cols(dateObserved = col_date(format = "%Y-%m-%d")))
->>>>>>> 9d5c088758fcf2fee01484ce928ba65f951a8fd3
 ```
 
 Manipulamos los datos para obtener un solo dataframe bien estructurado.
+
 ```{r}
 #Añadimos una columna que contenga el nombre de la calle para poder identificarlas despues.
 Cadiz_16 <- cbind(Cadiz_16, Nombre_calle = c("Cadiz_16"))
@@ -143,5 +143,29 @@ colnames(df) <- c("Id", "Fecha_registro", "Servicio_sensor", "Tipo_entidad_senso
                   "Nivel_sonoro_dia_tarde_noche", "Nivel_sonoro_tarde",
                   "Nivel_sonoro_noche", "Dia_medicion", "Nombre_calle")
 
+head(df)
+summary(df)
+
+#Como vemos hay +inf en el nivel sonoro de día
+nivel_sonoro_dia = df[,7]
+nivel_sonoro_dia[is.infinite(nivel_sonoro_dia)] <- NA
+nivel_sonoro_dia_media = mean(nivel_sonoro_dia, na.rm = T)
+
+df[which(is.infinite(unlist(df[7]))),7] <- nivel_sonoro_dia_media
+
+#Como vemos hay +inf en el nivel sonoro de tarde
+nivel_sonoro_tarde = df[,9]
+nivel_sonoro_tarde[is.infinite(nivel_sonoro_tarde)] <- NA
+nivel_sonoro_tarde_media = mean(nivel_sonoro_tarde, na.rm = T)
+
+df[which(is.infinite(unlist(df[9]))),9] <- nivel_sonoro_tarde_media
+
+summary(df)
+```
+
+Vamos a hacerlo tidy
+
+```{r}
+df <- df %>% pivot_longer(6:10,names_to = "tipo_medicion", values_to = "nivel")
 ```
 
