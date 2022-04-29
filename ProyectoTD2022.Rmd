@@ -46,10 +46,18 @@ package.check <- lapply(packages, FUN=function(x) {
 # verify they are loaded
 search()
 ```
+# Contactar con los compañeros de grupo
 
+# Crear el repositorio ProyectoTD2022
+El repositorio se encunetra en el siguinete enlace: https://github.com/Josepgirpla/ProyectoTD2022.git
+
+# Descargar y almacenarlos los ficheros de datos
+Los ficheros han sido almacenados en la carpeta ./data contenida en el proyecto
+
+# Importación y fusión de los datos
+Importamos los datos descargados en distintos dataframes.
 
 ```{r}
-
 
 Cadiz_3 <- read_csv("data/Cadiz_3.csv",
                     col_types = cols(dateObserved = col_date(format = "%Y-%m-%d")))
@@ -60,7 +68,7 @@ Cadiz_16 <- read_csv("data/Cadiz_16.csv",
 Carles_Cervera_34 <- read_csv("data/Carles_Cervera_34.csv",
                     col_types = cols(dateObserved = col_date(format = "%Y-%m-%d")))
 
-Carles_Cervera_Chaflan_Reina_Dona_Maria <- read_csv("data/Carles_Cervera_Chaflan_Reina_Doña_Maria.csv",
+Carles_Cervera_Chaflan_Reina_Dona_Maria <- read_csv("data/Carles_Cervera_Chaflan_Reina_Dona_Maria.csv",
                     col_types = cols(dateObserved = col_date(format = "%Y-%m-%d")))
 
 Cuba_3 <- read_csv("data/Cuba_3.csv",
@@ -93,6 +101,7 @@ Sueca_Esq_Denia <- read_csv("data/Sueca_Esq_Denia.csv",
 Vivons_Chaflan_Cadiz <- read_csv("data/Vivons_Chaflan_Cadiz.csv",
                     col_types = cols(dateObserved = col_date(format = "%Y-%m-%d")))
 ```
+
 
 Manipulamos los datos para obtener un solo dataframe bien estructurado.
 
@@ -163,9 +172,24 @@ df[which(is.infinite(unlist(df[9]))),9] <- nivel_sonoro_tarde_media
 summary(df)
 ```
 
+## Preguntas a reponder en el proyecto
+
+  1. ¿Cuáles son las calles mas ruidosas en cada momento del día?¿Existen diferencias entre los fines de semana y el resto de días? 
+  2. ¿Hay alguna calle q exceda  en algún momento  los estándares impuestos en la ley estatal de ruido?
+  3. ¿Podemos determinar horarios o patrones de ruido en los datos recogidos por los sensores?
+  4. ¿Existe alguna relación entre los días festivos en la ciudad y un cambio en la tendencia de los datos recogidos?
+  5. ¿Cuáles son las horas del día con mas ruido en cada calle? Y en la ciudad en general?
+  6. ¿Podemos tratar de deducir el provocante de un ruido anormal a partir de la posición de un sensor?
+  7. Con los datos proporcionados, ¿Es posible realizar un mapa de ruido?
+
+
+# Acondicionamiento de los datos para que se correspondan con un tidy dataset.
+
 Vamos a hacerlo tidy
 
 ```{r}
 df <- df %>% pivot_longer(6:10,names_to = "tipo_medicion", values_to = "nivel")
+head(df)
 ```
 
+# Desarrollo del proyecto
