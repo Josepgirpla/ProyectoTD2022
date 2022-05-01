@@ -10,30 +10,11 @@ output:
     toc: yes
 ---
 
-```{r echo = F, message = F, warning = F}
-library(knitr)
-opts_chunk$set(echo=T, message = F, error = T, warning = T, comment = NA, fig.align = 'center', dpi = 200, tidy = F, cache.path = '.cache/', fig.path = './figura/')
-
-packages = c("tidyverse")
-package.check <- lapply(packages, FUN = function(x) {
-  if (!require(x, character.only = TRUE)) {
-    install.packages(x, dependencies = TRUE,repos='http://cran.rediris.es')
-  }
-  library(x, character.only = TRUE)
-})
-```
-
-Limpiamos el entorno de trabajo antes de comenzar a trabajar.
-
-```{r}
-rm(list = ls())
-```
-
 Cargamos las librerias necesarias.
 
 ```{r}
 #Cargamos todas las librerias necesarias para trabajar.
-packages=c("tidyverse", "knitr", "ggplot2", "datasets", "RColorBrewer", "dplyr", "readr", "tidyr")
+packages=c("tidyverse", "knitr", "ggplot2", "datasets", "RColorBrewer", "dplyr", "readr", "tidyr","lubridate","gganimate","plotly")
 # use this function to check if each package is on the local machine
 # if a package is installed, it will be loaded
 # if any are not, the missing package(s) will be installed and loaded
@@ -43,9 +24,17 @@ package.check <- lapply(packages, FUN=function(x) {
     library(x, character.only=TRUE)
   }
 })
+opts_chunk$set(echo=T, message = F, error = T, warning = T, comment = NA, fig.align = 'center', dpi = 200, tidy = F, cache.path = '.cache/', fig.path = './figura/')
 # verify they are loaded
 search()
 ```
+
+Limpiamos el entorno de trabajo antes de comenzar a trabajar.
+
+```{r}
+rm(list = ls())
+```
+
 # Contactar con los compañeros de grupo
 
 # Crear el repositorio ProyectoTD2022
@@ -167,7 +156,7 @@ nivel_sonoro_tarde = df[,9]
 nivel_sonoro_tarde[is.infinite(nivel_sonoro_tarde)] <- NA
 nivel_sonoro_tarde_media = mean(nivel_sonoro_tarde, na.rm = T)
 
-df[which(is.infinite(unlist(df[9]))),9] <- nivel_sonoro_tarde_media
+df[is.na(nivel_sonoro_tarde),9] <- nivel_sonoro_tarde_media
 
 summary(df)
 ```
@@ -188,8 +177,66 @@ summary(df)
 Vamos a hacerlo tidy
 
 ```{r}
-df <- df %>% pivot_longer(6:10,names_to = "tipo_medicion", values_to = "nivel")
+df <- df %>% gather(key= "tipo_medida", value = "valor", 6:10)
 head(df)
 ```
 
 # Desarrollo del proyecto
+Vamos a comenzar con el estudio de los datos sin hacer disticiones en las calles, para ello crearemos un nuevo df con la media por dias de cada uno de las distintas medidas
+
+```{r}
+total = df %>% group_by(tipo_medida, Dia_medicion) %>% summarise(valor = mean(valor)) %>% select(Dia_medicion,tipo_medida,valor)
+```
+
+Vamos a ver como evoluciona la contaminación sonora según el día de la semana.
+
+```{r}
+dias = c("lunes","martes","miércoles","jueves","viernes","sábado","domingo")
+total %>%
+  #Se añade la columna con el día de la semana
+  mutate(dia = weekdays(Dia_medicion)) %>%
+  #Se hace la columna día un factor
+  mutate(dia = factor(weekdays(Dia_medicion), ordered = T,levels = dias)) %>%
+  #Se elimina la columna dia medición
+  select(-Dia_medicion) %>%
+  #Se agrupa por dia y el tipo de medida para hacer una columna de valor una media
+  group_by(dia, tipo_medida) %>%
+  mutate(valor = mean(valor)) %>%
+  #Se eliminan los repetidos
+  unique() %>%
+  #Se hace una columna con el dia de la semana en número
+  mutate(dia_num = grep(dia,dias)) %>%
+  #Se hace el gráfico en función del tipo de medida
+  ggplot(aes(x = dia, y = valor, color = tipo_medida, group = tipo_medida)) + 
+  geom_line() +
+  labs(title = "Nivel sonoro en función del día de la semana", subtitle = "Esta es la evolución de cada uno de las distintas medidas \ndel nivel sonoro en función del día de la semana", x = "Día de la semana", y = "Nivel sonoro", fill = "Tipo de medida") +
+  transition_reveal(dia_num)
+```
+
+Vamos a ver como evoluciona a lo largo de los meses. Se utilizará solo el nivel sonoro continuo equivalente
+
+```{r}
+meses = c("enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiempre","octubre","noviembre","diciembre")
+grafico = total %>%
+  #Se añade la columna con el día de la semana
+  mutate(mes_num = month(Dia_medicion)) %>%
+  #Se utiliza solo el nivel sonoro equivalente
+  filter(tipo_medida == "Nivel_sonoro_continuo_equivalente") %>%
+  #Se elimina la columna dia medición
+  select(-Dia_medicion) %>%
+  #Se agrupa por dia y el tipo de medida para hacer una columna de valor una media
+  group_by(mes_num, tipo_medida) %>%
+  mutate(valor = mean(valor)) %>%
+  #Se eliminan los repetidos
+  unique() %>%
+  #Se hace una columna con el mes
+  mutate(mes = meses[mes_num]) %>%
+  mutate(mes = factor(mes,ordered = T, levels = meses)) %>%
+  #Se hace el gráfico en función del tipo de medida
+  ggplot(aes(x = mes, y = valor, fill = mes)) + 
+  geom_bar(stat="identity") + 
+  theme(legend.position="none",axis.text.x = element_text(angle = 45,hjust = 1, vjust = 1)) + 
+  coord_cartesian(ylim = c(55,65))
+ggplotly(grafico, height = 350, width=600)
+```
+
