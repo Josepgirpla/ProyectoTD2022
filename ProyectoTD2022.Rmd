@@ -14,7 +14,7 @@ Cargamos las librerias necesarias.
 
 ```{r}
 #Cargamos todas las librerias necesarias para trabajar.
-packages=c("tidyverse", "knitr", "ggplot2", "datasets", "RColorBrewer", "dplyr", "readr", "tidyr","lubridate","gganimate","plotly")
+packages=c("tidyverse", "knitr", "ggplot2", "datasets", "RColorBrewer", "dplyr", "readr", "tidyr","lubridate","gganimate","plotly","png","paletteer")
 # use this function to check if each package is on the local machine
 # if a package is installed, it will be loaded
 # if any are not, the missing package(s) will be installed and loaded
@@ -232,11 +232,48 @@ grafico = total %>%
   #Se hace una columna con el mes
   mutate(mes = meses[mes_num]) %>%
   mutate(mes = factor(mes,ordered = T, levels = meses)) %>%
-  #Se hace el gráfico en función del tipo de medida
+  #Se hace el gráfico en función del tipo del mes
   ggplot(aes(x = mes, y = valor, fill = mes)) + 
   geom_bar(stat="identity") + 
   theme(legend.position="none",axis.text.x = element_text(angle = 45,hjust = 1, vjust = 1)) + 
   coord_cartesian(ylim = c(55,65))
 ggplotly(grafico, height = 350, width=600)
+```
+
+Ahora vamos a continuar viendo la evolución del ruido por dias segun las calles
+
+```{r}
+coordx = c("Cadiz_3" = 3, "Cadiz_16" = 3, "Carles_Cervera_34" = 3.2, "Carles_Cervera_Chaflan_Reina_Dona_Maria" = 3,"Cuba_3" = 0.86, "Doctor_Serrano_21" = 3.1, "General_Prim_Chaflan_Donoso_Cortes" = 6, "Puerto_Rico_21" = 1.5, "Salvador_Abril_Chaflan_Maestro_Jose_Serrano" = 6, "Sueca_2" = 1.95, "Sueca_32" = 1.95, "Sueca_61" = 1.95, "Sueca_Esq_Denia" = 1.95, "Vivons_Chaflan_Cadiz" = 3)
+coordy = c("Cadiz_3" = 4.25, "Cadiz_16" = 4.1, "Carles_Cervera_34" = 2, "Carles_Cervera_Chaflan_Reina_Dona_Maria" = 1.85,"Cuba_3" = 4.25, "Doctor_Serrano_21" = 3.35, "General_Prim_Chaflan_Donoso_Cortes" = 2.2, "Puerto_Rico_21" = 2.93, "Salvador_Abril_Chaflan_Maestro_Jose_Serrano" = 3.1, "Sueca_2" = 4.5, "Sueca_32" = 2.9, "Sueca_61" = 1.6, "Sueca_Esq_Denia" = 4, "Vivons_Chaflan_Cadiz" = 1)
+
+ruzafa = readPNG("./data/ruzafa.png")
+
+df %>% 
+  #Se añade la columna con el día de la semana
+  mutate(mes_num = month(Dia_medicion)) %>%
+  #Se utiliza solo el nivel sonoro equivalente
+  filter(tipo_medida == "Nivel_sonoro_continuo_equivalente") %>%
+  #Se elimina la columna dia medición
+  select(-c(Dia_medicion,Fecha_registro,Id)) %>%
+  #Se agrupa por dia y el tipo de medida para hacer una columna de valor una media
+  group_by(mes_num, tipo_medida, Nombre_calle) %>%
+  mutate(valor = mean(valor)) %>%
+  mutate(invalor = 1/mean(valor)) %>%
+  #Se eliminan los repetidos
+  unique() %>%
+  #Se hace una columna con el mes
+  mutate(mes = meses[mes_num]) %>%
+  mutate(mes = factor(mes,ordered = T, levels = meses)) %>%
+  #Se utiliza solo el nivel sonoro equivalente
+  filter(tipo_medida == "Nivel_sonoro_continuo_equivalente") %>%
+  #Se hace el gráfico
+  ggplot(aes(x = coordx[Nombre_calle], y = coordy[Nombre_calle])) +
+  background_image(ruzafa) +
+  geom_point(alpha=0.5, aes(col = invalor, size = valor)) +
+  xlim(c(0,6)) + 
+  ylim(c(0,4.5)) + 
+  theme(legend.position = "None") +
+  transition_manual(frames = mes) +
+  labs(title = "Distribución de sonidos en función del mes y el lugar", subtitle = "{current_frame}")
 ```
 
