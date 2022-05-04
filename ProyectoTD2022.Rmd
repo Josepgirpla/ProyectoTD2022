@@ -14,7 +14,7 @@ Cargamos las librerias necesarias.
 
 ```{r}
 #Cargamos todas las librerias necesarias para trabajar.
-packages=c("tidyverse", "knitr", "ggplot2", "datasets", "RColorBrewer", "dplyr", "readr", "tidyr","lubridate","gganimate","plotly","png","paletteer")
+packages=c("tidyverse", "knitr", "ggplot2", "datasets", "RColorBrewer", "dplyr", "readr", "tidyr","lubridate","gganimate","plotly","png","ggpubr","colorspace")
 # use this function to check if each package is on the local machine
 # if a package is installed, it will be loaded
 # if any are not, the missing package(s) will be installed and loaded
@@ -236,7 +236,8 @@ grafico = total %>%
   ggplot(aes(x = mes, y = valor, fill = mes)) + 
   geom_bar(stat="identity") + 
   theme(legend.position="none",axis.text.x = element_text(angle = 45,hjust = 1, vjust = 1)) + 
-  coord_cartesian(ylim = c(55,65))
+  coord_cartesian(ylim = c(55,65)) +
+  labs(title = "Distribución del sonido en función del mes", x = "Mes", y = "Nivel sonoro equivalente", caption = "Fijarse en el eje y")
 ggplotly(grafico, height = 350, width=600)
 ```
 
@@ -258,7 +259,6 @@ df %>%
   #Se agrupa por dia y el tipo de medida para hacer una columna de valor una media
   group_by(mes_num, tipo_medida, Nombre_calle) %>%
   mutate(valor = mean(valor)) %>%
-  mutate(invalor = 1/mean(valor)) %>%
   #Se eliminan los repetidos
   unique() %>%
   #Se hace una columna con el mes
@@ -269,11 +269,13 @@ df %>%
   #Se hace el gráfico
   ggplot(aes(x = coordx[Nombre_calle], y = coordy[Nombre_calle])) +
   background_image(ruzafa) +
-  geom_point(alpha=0.5, aes(col = invalor, size = valor)) +
+  geom_point(alpha=0.5, aes(col = valor, size = valor)) +
   xlim(c(0,6)) + 
-  ylim(c(0,4.5)) + 
-  theme(legend.position = "None") +
+  ylim(c(0,4.5)) +
+  scale_size_continuous(range = c(5, 20)) +
+  scale_color_continuous_sequential(palette = "Reds", l1 = 20, c2 = 70, p1 = 1) +
+  theme(legend.position = "None",axis.text.x = element_blank(),axis.text.y = element_blank()) +
   transition_manual(frames = mes) +
-  labs(title = "Distribución de sonidos en función del mes y el lugar", subtitle = "{current_frame}")
+  labs(title = "Distribución de sonidos en función del mes y el lugar", subtitle = "{current_frame}", x = element_blank(), y = element_blank())
 ```
 
