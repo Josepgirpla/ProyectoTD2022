@@ -1,6 +1,6 @@
 ---
 title: "ProyectoTD2022"
-author: "Grupo D"
+author: "Roberto Arnaiz Asensio, Pedro De Luna Huerta, Josep Antoni Girbés Plaza, Lidia Moreno Marín"
 date: "3/4/2022"
 output:
   html_document:
