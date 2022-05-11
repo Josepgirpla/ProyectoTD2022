@@ -164,7 +164,7 @@ summary(df)
 ## Preguntas a reponder en el proyecto
 
   1. ¿Cuáles son las calles mas ruidosas en cada momento del día?¿Existen diferencias entre los fines de semana y el resto de días? 
-  2. ¿Hay alguna calle q exceda  en algún momento  los estándares impuestos en la ley estatal de ruido?
+  2. ¿Hay alguna calle que exceda en algún momento los estándares impuestos en la ley estatal de ruido?
   3. ¿Podemos determinar horarios o patrones de ruido en los datos recogidos por los sensores?
   4. ¿Existe alguna relación entre los días festivos en la ciudad y un cambio en la tendencia de los datos recogidos?
   5. ¿Cuáles son las horas del día con mas ruido en cada calle? Y en la ciudad en general?
@@ -212,9 +212,22 @@ total %>%
   labs(title = "Nivel sonoro en función del día de la semana", subtitle = "Esta es la evolución de cada uno de las distintas medidas \ndel nivel sonoro en función del día de la semana", x = "Día de la semana", y = "Nivel sonoro", fill = "Tipo de medida") +
   transition_reveal(dia_num)
 ```
+*Explicación y comentarios*
+A simple vista podemos observar como a lo largo de los días de la semana los niveles de ruido tienen un comportamiento muy similar, todos siguen un patrón, donde decaen el martes pero a partir de ahí van en aumento hasta el domingo, sobre todo desde los jueves por la tarde hasta los sábados noche. 
+
+Esto nos indica que a medida que avanza la semana, el barrio de ruzafa se vuelve más ruidoso. Si nos damos cuenta esto coincide con los días en los que es más "típico" salir de fiesta y por tanto vemos como evolucionan aumentando el sonido a medida que llegan estos días dado que ruzafa es un barrio repleto de bares, terrazas y lugares de ocio. Sin hacer ningún tipo de estudio en el tipo de personas que frecuentan el barrio de Ruzafa hemos concluido que muy posiblemente se trate de personas jovenes, esta conclusión la extraemos al observar que los niveles de ruido aumentan considerablemente cuando se acercan los fines de semana momento que se corresponde con una mayor actividad de los jòvenes y del ocio nocturno donde las principales actividades del sector se desempeñan habitualmente de jueves a sábado.
+
+Ahora vamos a darle un enfoque diferente, veamos si el barrio de Ruzafa cumple con la normativa actual de ruidos. Si consultamos el anexo II de la "Ley 7/2002, de 3 de diciembre, de protección contra la contaminación acústica", encontraremos la siguiente tabla:
+![](data/table_db_externos.png)
+Esta hace referencia al nivel sonoro diurno y nocoturno para cada tipo de uso, en nuestro caso el barrio de Ruzafa lo tomaremos como una zona residencial.
+
+Ahora si nos fijamos en el gráfico en la evolución de dichos niveles podemos observar con facilidad que para ningún día de la semana están por debajo del nivel legal.
+
+Con esto podemos afirmar que en el barrio de Ruzafa existe una gran cantidad de contaminación acústica y que se debería tratar de tomar medidas para reducir estos niveles de ruido a los que nos indica la ley.
+
+
 
 Vamos a ver como evoluciona a lo largo de los meses. Se utilizará solo el nivel sonoro continuo equivalente
-
 ```{r}
 meses = c("enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiempre","octubre","noviembre","diciembre")
 grafico = total %>%
@@ -240,9 +253,37 @@ grafico = total %>%
   labs(title = "Distribución del sonido en función del mes", x = "Mes", y = "Nivel sonoro equivalente", caption = "Fijarse en el eje y")
 ggplotly(grafico, height = 350, width=600)
 ```
+En este gráfio hemos representado el nivel sonoro continuo equivalente por meses en el barrio de Ruzafa.
+
+Al ser una representación por meses lo primero que nos vino a la cabeza al ver el gráfico fue la hipostesis de que en los meses que más elevado era el nivel sonoro debian corresponderse con los meses que tuvieran festividades destacables en el barrio de Ruzafa. Así pues nos pusimos a buscar las festividades del barrio de ruzafa (solo las más reseñables) ya que necesitabamos festividades con el suficiente impacto y duración como para alterar la estadistica de sonido de un mes completo. De este modo encontramos las siguientes festividades que podrian ser útiles para la corroboración de nuestra hipotesis:
+
+  + Vacaciones de navidad del 23/12 al 07/01
+  
+  + Vacaciones de fallas del 16/03 al 19/03
+  
+  + Vacaciones de pascua del 14/04 al 25/04
+  
+Después de no encontrar muchas fiestas lo suficientemente grandes como para alterar el nivel de decibelios de un mes completo decidimos analizar las que teniamos y dar nuestras conclusiones al respecto.
+
+Si nos damos cuenta nuestra hipostesis de que en las festividades más grandes debia haber un nivel de ruido mayor, realmente solo se cumple en e mes de marzo con la festividad de las fallas en éste. Pero obviamente un solo caso no indica nada y más conociendo la festividad de las fallas. festividad donde la actividad principal son el lanzamiento de petardos, tracas, castillos, mascletaes y fuegos artificiales entre otros. Todos estos modifican de manera considerable el nivel sonoro del barrio en el mes de marzo.
+
+Es más en el mes siguiente, abril, podemos ver un descenso muy considerble en los niveles de ruido convirtiendose en el més mas silencioso del año en el barrio de Ruzafa. Esto no concuerda tampoco con nuestra hipotesis ya que en el mes de abril nos encontramos con otra festividad lo suficientemente grande como para pensar que elevaria los niveles sonoros por encima de la media.
+
+Así pues concluimos que nuestr hipotesis inicial era falsa, y que no son suficientes estas festividades como para elevar los niveles sonoros por encima de la media en el barrio.
+
+Pero había que investrigar entonces los dos casos raros que nos quedaban en el gráfico, el mes de abril, como podia ser el más silencioso? Y por otra parte septiembre, como podia tener unos niveles de ruido tan elevados distanciandose solo 1db por debajo del mes de las Fallas?
+
+Nos pusimos a investigar y concluimos que:
+
+Es popsible que los niveles sonoros sean menores en el mes de abril debido a que después de un mes como marzo, con las fallas, es posible que la gente prefiera un entorno más tranquilo y por ello tranten de hacer menos ruido. Por otra parte también es posible que en el mes de abril debido a que la festividad de semana santa es una festividad en la que la gentre prefiere irse fuera a la comunidad autonoma de andalucia porque allí la fiesta se v ive mucho más es posible que el barrio de Ruzafa este menos transitado durante este mes y por eso encontramos que es el mes mas silencioso.
+
+El otro caso que se sale de la media es septiembre, aqui hemos encontrado dos posibilidades:
+
+Como el gráfico hace referencia al año 2021 en el mes de septiembre de ese año se celebraron las fiestas de las fallas que no se pudieron celebrar en el mes de marzo anterior. Pero esto no dejaría sin una explicación razonable para porque el mes de marzo fue tan tuidoso si no hubo ceebración de fallas.
+
+La otra explicación que encontramos al alto nivel sonoro del mes de septiembre es que en éste mes empiezan las clases en todos los niveles educativos y como ruzafa es un barrio frecuentado por gente joven, estudiantes en su gran mayoria y tiene muchas zonas de ocio es posible que con la vuelta a las clases haya una mayor actividad en las calles y por eso los sonómetros registren valores tan elevados. 
 
 Ahora vamos a continuar viendo la evolución del ruido por dias segun las calles
-
 ```{r}
 coordx = c("Cadiz_3" = 3, "Cadiz_16" = 3, "Carles_Cervera_34" = 3.2, "Carles_Cervera_Chaflan_Reina_Dona_Maria" = 3,"Cuba_3" = 0.86, "Doctor_Serrano_21" = 3.1, "General_Prim_Chaflan_Donoso_Cortes" = 6, "Puerto_Rico_21" = 1.5, "Salvador_Abril_Chaflan_Maestro_Jose_Serrano" = 6, "Sueca_2" = 1.95, "Sueca_32" = 1.95, "Sueca_61" = 1.95, "Sueca_Esq_Denia" = 1.95, "Vivons_Chaflan_Cadiz" = 3)
 coordy = c("Cadiz_3" = 4.25, "Cadiz_16" = 4.1, "Carles_Cervera_34" = 2, "Carles_Cervera_Chaflan_Reina_Dona_Maria" = 1.85,"Cuba_3" = 4.25, "Doctor_Serrano_21" = 3.35, "General_Prim_Chaflan_Donoso_Cortes" = 2.2, "Puerto_Rico_21" = 2.93, "Salvador_Abril_Chaflan_Maestro_Jose_Serrano" = 3.1, "Sueca_2" = 4.5, "Sueca_32" = 2.9, "Sueca_61" = 1.6, "Sueca_Esq_Denia" = 4, "Vivons_Chaflan_Cadiz" = 1)
