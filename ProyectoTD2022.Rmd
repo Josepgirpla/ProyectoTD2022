@@ -163,19 +163,38 @@ summary(df)
 
 ## Preguntas a reponder en el proyecto
 
-  1. ¿Cuáles son las calles mas ruidosas en cada momento del día?¿Existen diferencias entre los fines de semana y el resto de días? 
-  2. ¿Hay alguna calle que exceda en algún momento los estándares impuestos en la ley estatal de ruido?
+  1. ¿Cuáles son las calles mas ruidosas en cada momento del día?¿Existen diferencias entre los fines de semana y el resto de días?
+  
+  *Respuesta*
+  
+  Si nos centramos en las diferencias que existen en los niveles de contaminación acústica entre los fines de semana y el resto de la semana nos damos cuenta rapidamente de que desde los jueves por la tarde hasta los domingos de madrugada los niveles sonoros aumentan considerablemente superando con creces los límites legales que la Ley 7/2002, de 3 de diciembre, de protección contra la contaminación acústica establece como límites legales.
+  
+  2. ¿En algún momento el barrio de Ruzafa supera los estándares impuestos en la ley estatal de ruido?
+  
+  *Respuesta*
+  
+  Si, como más adelante explicaremos con los gráficos realizados durante el estudio de contaminación acustica en el barrio de Ruzafa y con los datos observados y comparando los niveles sonoros con los establecidos en la ley de contaminación acústica podemos afirmar que el barrio de Ruzafa esta por encima de los estándares en todas las horas del día durante todos los días de la semana. 
+  
   3. ¿Podemos determinar horarios o patrones de ruido en los datos recogidos por los sensores?
   4. ¿Existe alguna relación entre los días festivos en la ciudad y un cambio en la tendencia de los datos recogidos?
-  5. ¿Cuáles son las horas del día con mas ruido en cada calle? Y en la ciudad en general?
-  6. ¿Podemos tratar de deducir el provocante de un ruido anormal a partir de la posición de un sensor?
-  7. Con los datos proporcionados, ¿Es posible realizar un mapa de ruido?
+  
+  *Respuesta*
+  
+  Nuestra hipotesis inicial es que si existe una relación entre las festividades más importantes del barrio de Ruzafa así como las de la ciudad de Valencia. Hemos dibujado un gráfico donde agrupamos en el nivel sonoro por meses del año ya que hacer un estudio solo por días no era demásiado representativo.
+  
+  Una vez con el gráfico hecho y tras analizar en más profundidad las festividades que cumplen los requisitos en cuanto a duración y calibre (gente a la que atrae la festividad, nivel de actividad en las calles debido a la fiesta en cuestiónb) de la festividad concluimos que vemos cambios significativos en el mes de marzo, cosa que esperabamos ya que en este mes se celebra una de las fiestas más importantes de Valencia sino la más importante. Notamos un amuento en los niveles registrayos ya que en estas fiestas las actividades principales són hacer mascletaes, fuegos artificiales y de más actividades que generen un alto nivel sonoro. 
+  
+  En contra partida nos dimos cuenta que este patrón no se seguia para el resto de festividades consideradas como la semana santa, donde se realizan procesiones y demás actividades al aire libre y podían causar un aumento en los niveles registrados por los sonómetros. Tampoco detectamos aumentos para las fiestas de navidad, ni para el periodo vacacional de verano de los calendarios lectivos. La explicación que encontramos para esto ha sido que tanto en verano como navidades o semana santa mucha gente aprovecha para volver a sus casas y estar con la familia. Y como el barrio de ruzafa esta frcuentado por gente joven o estudiantes durante estos periodos no residen en el barrio y por eso no vemos un aumento considerable en los niveles de ruido.
+  
+  Por tanto piodemos concluir que nuestra hipotesis inicial no era correcta.
+  
+  5. ¿Podemos tratar de deducir el provocante de un ruido anormal a partir de la posición de un sensor?
+  6. Con los datos proporcionados, ¿Es posible realizar un mapa de ruido?
 
 
 # Acondicionamiento de los datos para que se correspondan con un tidy dataset.
 
 Vamos a hacerlo tidy
-
 ```{r}
 df <- df %>% gather(key= "tipo_medida", value = "valor", 6:10)
 head(df)
