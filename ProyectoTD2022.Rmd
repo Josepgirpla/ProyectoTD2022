@@ -14,7 +14,8 @@ Cargamos las librerias necesarias.
 
 ```{r}
 #Cargamos todas las librerias necesarias para trabajar.
-packages=c("tidyverse", "knitr", "ggplot2", "datasets", "RColorBrewer", "dplyr", "readr", "tidyr","lubridate","gganimate","plotly","png","ggpubr","colorspace")
+packages=c("tidyverse", "knitr", "ggplot2", "datasets", "RColorBrewer", "dplyr", "readr", "tidyr","lubridate","gganimate","plotly","png","ggpubr","colorspace","magrittr","car","GGally")
+
 # use this function to check if each package is on the local machine
 # if a package is installed, it will be loaded
 # if any are not, the missing package(s) will be installed and loaded
@@ -200,6 +201,68 @@ df <- df %>% gather(key= "tipo_medida", value = "valor", 6:10)
 head(df)
 ```
 
+# Analisis univariante
+
+```{r}
+lapply(df[3:4],unique)
+```
+
+Como podemos ver hay muchos datos que son igual todo el rato, por lo que nos vamos a quedar con los datos que no se repiten y que nos proporcionan información. El Id, el Id del sensor y la fecha del registro no nos proporciona información, ya que lo que nos interesa en vez de estos camos es la fecha de la medición y el nombre de la calle
+
+```{r}
+df %<>% select(Dia_medicion,tipo_medida,valor,Nombre_calle)
+```
+
+Vamos a ver como quedan los datos
+
+```{r}
+head(df) %>% kable()
+summary(df) %>% kable()
+```
+
+Como vemos los datos se recogen desde septiembre del 2020 hasta abril del 2022.
+También se ve que el valor va desde 40 hasta casi 100, pero vemos que el rango interquartil es muy pequeño
+
+Vamos a ver si el valor se ajusta a una distribución normal:
+  
+```{r}
+qqPlot(df$valor)
+```
+
+Como vemos no se ajusta a una distribución normal.
+
+# Analisis bivariante
+
+Vamos a ver como de correlacionadas están las varibles.
+```{r}
+df %>% select(Dia_medicion,valor) %>% ggpairs()
+```
+
+A parte de ver que la correlación es muy baja (0.23) Se ve que no hay datos registrados en julio.
+
+Vamos a ver como de relacionadas están las variables de el valor y el nombre de la calle
+
+```{r}
+chisq.test(x = df$valor, y = df$Nombre_calle,correct = F)
+```
+
+Podemos ver que p es muy pequeño, por ello vemos que si que están relacionados.
+
+Seguro que el nivel sonoro está relacionado con el tipo de medicion, por eso en vez de ver la relación que hay entre ellas vamos a ver como de relacionado están los valores entre sí en función del tipo de medición:
+  
+```{r}
+nombres = unique(df$tipo_medida)
+df %>% spread(key = tipo_medida, value = valor) %>% select(nombres) %>% ggpairs()
+```
+
+Como podemos ver la mayor correlación está entre el nivel sonoro del día y el nivel continuo equivalente
+
+```{r}
+df %>% spread(key = tipo_medida, value = valor) %>% select(nombres) %>% ggcorr()
+```
+
+Como vemos en esta forma más gráfica no es mucha la diferencia entre las correlaciones, y también se ve que son correlaciones muy elevadas
+
 # Desarrollo del proyecto
 Vamos a comenzar con el estudio de los datos sin hacer disticiones en las calles, para ello crearemos un nuevo df con la media por dias de cada uno de las distintas medidas
 
@@ -237,7 +300,7 @@ A simple vista podemos observar como a lo largo de los días de la semana los ni
 Esto nos indica que a medida que avanza la semana, el barrio de ruzafa se vuelve más ruidoso. Si nos damos cuenta esto coincide con los días en los que es más "típico" salir de fiesta y por tanto vemos como evolucionan aumentando el sonido a medida que llegan estos días dado que ruzafa es un barrio repleto de bares, terrazas y lugares de ocio. Sin hacer ningún tipo de estudio en el tipo de personas que frecuentan el barrio de Ruzafa hemos concluido que muy posiblemente se trate de personas jovenes, esta conclusión la extraemos al observar que los niveles de ruido aumentan considerablemente cuando se acercan los fines de semana momento que se corresponde con una mayor actividad de los jòvenes y del ocio nocturno donde las principales actividades del sector se desempeñan habitualmente de jueves a sábado.
 
 Ahora vamos a darle un enfoque diferente, veamos si el barrio de Ruzafa cumple con la normativa actual de ruidos. Si consultamos el anexo II de la "Ley 7/2002, de 3 de diciembre, de protección contra la contaminación acústica", encontraremos la siguiente tabla:
-![](data/table_db_externos.png)
+[](data/table_db_externos.png)
 Esta hace referencia al nivel sonoro diurno y nocoturno para cada tipo de uso, en nuestro caso el barrio de Ruzafa lo tomaremos como una zona residencial.
 
 Ahora si nos fijamos en el gráfico en la evolución de dichos niveles podemos observar con facilidad que para ningún día de la semana están por debajo del nivel legal.
