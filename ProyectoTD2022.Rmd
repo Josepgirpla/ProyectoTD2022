@@ -145,21 +145,71 @@ colnames(df) <- c("Id", "Fecha_registro", "Servicio_sensor", "Tipo_entidad_senso
 head(df)
 summary(df)
 
-#Como vemos hay +inf en el nivel sonoro de día
+```
+
+Para terminar con este apartado vamos a realizar un análisis de los valores especiales o inconsistencias que puedan aparecer en nuestro dataframe.
+
+```{r}
+#Primero vamos a determinar si hay o no datos especiales.
+
+for (n in as.factor(colnames(df))){
+  tabla_inconsist <- df %>% count(is.finite(n))
+  
+  if (tabla_inconsist[1,2] < nrow(df)){
+    print(n)
+    print(tabla_inconsist[1,2])
+    }
+}
+
+#Realizamos una detección para cada columna con posibles valores especiales y los sustituimos por la media de todos los de su misma variable.
+
+#Nivel_sonoro_continuo_equivalente
+Nivel_sonoro_continuo_equivalente = df[,6]
+Nivel_sonoro_continuo_equivalente[!is.finite(Nivel_sonoro_continuo_equivalente)] <- NA
+Nivel_sonoro_continuo_equivalente_media = mean(Nivel_sonoro_continuo_equivalente, na.rm = T)
+
+df[which(!is.finite(unlist(df[6]))),6] <- Nivel_sonoro_continuo_equivalente_media
+
+#Nivel_sonoro_dia
 nivel_sonoro_dia = df[,7]
-nivel_sonoro_dia[is.infinite(nivel_sonoro_dia)] <- NA
+nivel_sonoro_dia[!is.finite(nivel_sonoro_dia)] <- NA
 nivel_sonoro_dia_media = mean(nivel_sonoro_dia, na.rm = T)
 
-df[which(is.infinite(unlist(df[7]))),7] <- nivel_sonoro_dia_media
+df[which(!is.finite(unlist(df[7]))),7] <- nivel_sonoro_dia_media
 
-#Como vemos hay +inf en el nivel sonoro de tarde
+#Nivel_sonoro_dia_tarde_noche
+ Nivel_sonoro_dia_tarde_noche = df[,8]
+ Nivel_sonoro_dia_tarde_noche[!is.finite( Nivel_sonoro_dia_tarde_noche)] <- NA
+ Nivel_sonoro_dia_tarde_noche_media = mean( Nivel_sonoro_dia_tarde_noche, na.rm = T)
+
+df[which(!is.finite(unlist(df[8]))),8] <-  Nivel_sonoro_dia_tarde_noche_media
+
+#Nivel_sonoro_tarde
 nivel_sonoro_tarde = df[,9]
-nivel_sonoro_tarde[is.infinite(nivel_sonoro_tarde)] <- NA
+nivel_sonoro_tarde[!is.finite(nivel_sonoro_tarde)] <- NA
 nivel_sonoro_tarde_media = mean(nivel_sonoro_tarde, na.rm = T)
 
-df[is.na(nivel_sonoro_tarde),9] <- nivel_sonoro_tarde_media
+df[!is.finite(nivel_sonoro_tarde),9] <- nivel_sonoro_tarde_media
 
-summary(df)
+#Nivel_sonoro_tarde
+Nivel_sonoro_noche = df[,10]
+Nivel_sonoro_noche[!is.finite(Nivel_sonoro_noche)] <- NA
+Nivel_sonoro_noche_media = mean(Nivel_sonoro_noche, na.rm = T)
+
+df[!is.finite(Nivel_sonoro_noche),10] <- Nivel_sonoro_noche_media
+
+
+#Volvemos a aplicar el bucle anterior para comprovar que ya no hay datos especiales.
+for (n in as.factor(colnames(df))){
+  tabla_inconsist <- df %>% count(is.finite(n))
+  
+  if (tabla_inconsist[1,2] < nrow(df)){
+    print(n)
+    print(tabla_inconsist[1,2])
+    }
+}
+
+head(df)
 ```
 
 ## Preguntas a reponder en el proyecto
@@ -401,4 +451,5 @@ df %>%
   transition_manual(frames = mes) +
   labs(title = "Distribución de sonidos en función del mes y el lugar", subtitle = "{current_frame}", x = element_blank(), y = element_blank())
 ```
+
 
