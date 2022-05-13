@@ -233,11 +233,11 @@ head(df)
   
   Nuestra hipotesis inicial es que si existe una relación entre las festividades más importantes del barrio de Ruzafa así como las de la ciudad de Valencia. Hemos dibujado un gráfico donde agrupamos en el nivel sonoro por meses del año ya que hacer un estudio solo por días no era demásiado representativo.
   
-  Una vez con el gráfico hecho y tras analizar en más profundidad las festividades que cumplen los requisitos en cuanto a duración y calibre (gente a la que atrae la festividad, nivel de actividad en las calles debido a la fiesta en cuestiónb) de la festividad concluimos que vemos cambios significativos en el mes de marzo, cosa que esperabamos ya que en este mes se celebra una de las fiestas más importantes de Valencia sino la más importante. Notamos un amuento en los niveles registrayos ya que en estas fiestas las actividades principales són hacer mascletaes, fuegos artificiales y de más actividades que generen un alto nivel sonoro. 
+  Una vez con el gráfico hecho y tras analizar en más profundidad las festividades que cumplen los requisitos en cuanto a duración y calibre (gente a la que atrae la festividad, nivel de actividad en las calles debido a la fiesta en cuestiónb) de la festividad concluimos que vemos cambios significativos en el mes de marzo, cosa que esperabamos ya que en este mes se celebra una de las fiestas más importantes de Valencia, sino la más importante. Notamos un amuento en los niveles registrados ya que en estas fiestas las actividades principales són hacer mascletaes, fuegos artificiales y de más actividades que generen un alto nivel sonoro. 
   
-  En contra partida nos dimos cuenta que este patrón no se seguia para el resto de festividades consideradas como la semana santa, donde se realizan procesiones y demás actividades al aire libre y podían causar un aumento en los niveles registrados por los sonómetros. Tampoco detectamos aumentos para las fiestas de navidad, ni para el periodo vacacional de verano de los calendarios lectivos. La explicación que encontramos para esto ha sido que tanto en verano como navidades o semana santa mucha gente aprovecha para volver a sus casas y estar con la familia. Y como el barrio de ruzafa esta frcuentado por gente joven o estudiantes durante estos periodos no residen en el barrio y por eso no vemos un aumento considerable en los niveles de ruido.
+  En contra partida nos dimos cuenta que este patrón no se seguia para el resto de festividades consideradas como la semana santa, donde se realizan procesiones y demás actividades al aire libre y podían causar un aumento en los niveles registrados por los sonómetros. Tampoco detectamos aumentos para las fiestas de navidad, ni para el periodo vacacional de verano de los calendarios lectivos. La explicación que encontramos para esto ha sido que tanto en verano como navidades o semana santa mucha gente aprovecha para volver a sus casas y estar con la familia. Y como el barrio de ruzafa esta frecuentado por gente joven o estudiantes durante estos periodos no residen en el barrio y por eso no vemos un aumento considerable en los niveles de ruido.
   
-  Por tanto piodemos concluir que nuestra hipotesis inicial no era correcta.
+  Por tanto podemos concluir que nuestra hipotesis inicial no era correcta.
   
   5. ¿Podemos tratar de deducir el provocante de un ruido anormal a partir de la posición de un sensor?
   6. Con los datos proporcionados, ¿Es posible realizar un mapa de ruido?
@@ -249,6 +249,100 @@ Vamos a hacerlo tidy
 ```{r}
 df <- df %>% gather(key= "tipo_medida", value = "valor", 6:10)
 head(df)
+```
+
+#Análisis de outliers
+Creamos una función para detectar Outliers, existen distintos métodos, en este caso vamos a utilizar el método 3 sigma.
+
+```{r}
+#Esta funcíón detecta los outliers y crea una lista con valores binarios para indicarlo.
+VecTresSigma <- function(x, na.rm=T){
+  media = mean(x, na.rm=na.rm)
+  sigma = sd(x, na.rm=na.rm)
+  LimInf = media - 3*sigma
+  LimSup = media + 3*sigma
+
+  v_resultado = c()
+  
+  for (e in x){
+    if (!is.na(e)){
+      if (e < LimInf){
+        v_resultado = c(v_resultado, T)
+      }else{
+        if (e > LimSup){
+          v_resultado = c(v_resultado, T)
+        }else{
+          v_resultado = c(v_resultado, F)
+        }
+      }
+    }
+    else{
+      v_resultado = c(v_resultado, NA)
+    }
+  }
+
+  return (v_resultado)
+}
+
+#Esta función obtiene y devuelve una serie de valores de interes como son, el limite inferior y superior de los outliers, los valores maximos fuera y dentro de este rango y el numero de elementos que se encuentran dentro del rango.
+TresSigma <- function(x, na.rm = T){
+  media = mean(x, na.rm = na.rm)
+  sigma = sd(x, na.rm = na.rm)
+  
+  LimInf = media - 3*sigma
+  LimSup = media + 3*sigma
+  n_dentro = length(which(x > LimInf | x < LimSup))
+  
+  max_fuera = max(x[which(x < LimInf)])
+  max_dentro = max(x[which(x < LimSup)])
+  min_fuera = min(x[which(x > LimSup)])
+  min_dentro = min(x[which(x > LimInf)])
+  
+  perc_dentro = n_dentro/length(x)
+  
+  vec_info = cbind(media, n_dentro, LimInf, LimSup, max_fuera, max_dentro, min_fuera, min_dentro, perc_dentro)
+  rownames(vec_info) = NULL
+  
+  return (vec_info)
+}
+```
+
+Realizamos el rastreo de outlier con respecto a las distintas calles y los representamos. Para ello hacemos uso de la primera función:
+
+```{r}
+l_calles <- unique(df$Nombre_calle)
+
+outliers_calle <- data.frame()
+
+for (calle in l_calles){
+  datos_calle <- df %>% subset(Nombre_calle == calle)
+  result <- VecTresSigma(datos_calle$valor)
+  outliers_calle <- rbind(outliers_calle, c(calle,sum(result)))
+  
+  print(sum(result))
+  print(calle)
+}
+
+colnames(outliers_calle) = c("calle", "número_outliers")
+
+#Podemos representar el número de outliers por calle mediante un diagrama de barras.
+ggplot(outliers_calle, aes(número_outliers, calle)) +  geom_point()
+
+```
+
+También podemos representar todos los datos en función de su calle, representando quales son los límites superiores he inferiores que estipula el método de detección. Para ello hemos de utilizar la segunda función.
+
+```{r}
+sol_sigma <- TresSigma(df$valor)
+
+#Mediante un diagrama de puntos.
+ggplot(df, aes(Nombre_calle, valor)) + geom_point(alpha = 0.05, col = "blue" ) + coord_flip()  + geom_hline(yintercept = sol_sigma[3], col = "red", linetype = 1) + geom_hline(yintercept = sol_sigma[4], , col = "blue", linetype = 1) + geom_hline(yintercept = sol_sigma[1], , col = "green", linetype = 2) + theme_bw()
+
+#Mediante diagrama de violin.
+ggplot(df, aes(Nombre_calle, valor)) +  geom_violin() + coord_flip() + theme(axis.text = element_text(size = 7)) + geom_hline(yintercept = sol_sigma[3]) + geom_hline(yintercept = sol_sigma[4])+ geom_hline(yintercept = sol_sigma[1], , col = "green", linetype = 2)  + theme_bw()
+
+
+plot(df$valor)
 ```
 
 # Analisis univariante
