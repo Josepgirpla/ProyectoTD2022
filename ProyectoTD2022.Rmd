@@ -428,7 +428,7 @@ df %>%
   #Se utiliza solo el nivel sonoro equivalente
   filter(tipo_medida == "Nivel_sonoro_continuo_equivalente") %>%
   #Se elimina la columna dia medición
-  select(-c(Dia_medicion,Fecha_registro,Id)) %>%
+  select(-Dia_medicion) %>%
   #Se agrupa por dia y el tipo de medida para hacer una columna de valor una media
   group_by(mes_num, tipo_medida, Nombre_calle) %>%
   mutate(valor = mean(valor)) %>%
