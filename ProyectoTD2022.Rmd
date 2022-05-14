@@ -587,3 +587,12 @@ total %>% filter(tipo_medida == "Nivel_sonoro_noche") %>% ggplot(aes(x = valor))
   labs(x = "Decibelios", y = "", title = "Nivel sonoro máximo", subtitle = "Nivel sonoro máximo durante la noche segun la legislación en función de si es zona residencial o terciaria")
 ```
 
+# Conclusiones
+
+Para finalizar el estudio de los datos recogidos por los sonómetros en el barrio de ruzafa vamos a las conslusiones a las que hemos llegado.
+
+Al ser un estudio realizado sobre los niveles de ruido, centraremos estas conclusiones haciendo referencia a la contaminación acústica que existe en el barrio de Ruzafa. Como ya hemos ido exponiendo a lo largo de nuestro estudio, encontramos que los niveles sonoros en eñ barrio de Ruzafa son excesivos (superando los niveles legales) y por tanto creemos que es necesario algún tipo de medida anticontaminación acustica por parte del ayuntamiento de valencia que fomente un menor nivel de ruido en las calles.
+
+Otra de las conclusiones que hemos obtenido del estudio de los datos recogidos es que podemos afirmar que el barrio de Ruzafa es un barrio que tiene por actividades principales la hostelería y el ocio nocturno, ya que fijandonos en como evoluciónan los registros de los sonómetros nos damos cuenta de que aumentan mucho cuando se acerca el fin de semana. De este mismo el estudio nos lleva a pensar que el barrio está frecuentado mayormente por jóvenes, no obstante esto no indica que estos mismos jóvenes residan en el barrio, pero si es el perfil de persona que encontraremos frecuentemente allí debido a que es un barrio como hemos dicho antes con gran cantidad de negocios, muchos ellos del sector hostelería.
+
+Una cosa curiosa que nos ha llevado a concluir el estudio y que no esperábamos es que en los meses en que encontramos las fiestas más grandes, encontramos los niveles más bajos de decibelios registrados por los sensores. Por supuesto cabe destacar que esto no es así para el mes de marzo, como es obvio debido a que en él se celebra la fiesta más importante de Valencia, las Fallas.
