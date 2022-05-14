@@ -11,7 +11,6 @@ output:
 ---
 
 Cargamos las librerias necesarias.
-
 ```{r include = F, echo=F}
 #Cargamos todas las librerias necesarias para trabajar.
 packages=c("tidyverse", "knitr", "ggplot2", "datasets", "RColorBrewer", "dplyr", "readr", "tidyr","lubridate","gganimate","plotly","png","ggpubr","colorspace","magrittr","car","GGally")
@@ -46,7 +45,6 @@ Los ficheros han sido almacenados en la carpeta ./data contenida en el proyecto
 
 # Importación y fusión de los datos
 Importamos los datos descargados en distintos dataframes.
-
 ```{r}
 
 Cadiz_3 <- read_csv("data/Cadiz_3.csv",
@@ -94,7 +92,6 @@ Vivons_Chaflan_Cadiz <- read_csv("data/Vivons_Chaflan_Cadiz.csv",
 
 
 Manipulamos los datos para obtener un solo dataframe bien estructurado.
-
 ```{r}
 #Añadimos una columna que contenga el nombre de la calle para poder identificarlas despues.
 Cadiz_16 <- cbind(Cadiz_16, Nombre_calle = c("Cadiz_16"))
@@ -148,7 +145,6 @@ df %>% summary %>% kable()
 ```
 
 Para terminar con este apartado vamos a realizar un análisis de los valores especiales o inconsistencias que puedan aparecer en nuestro dataframe.
-
 ```{r}
 #Primero vamos a determinar si hay o no datos especiales.
 
@@ -224,7 +220,7 @@ df %>% head() %>% kable()
   
   *Respuesta*
   
-  Si, como más adelante explicaremos con los gráficos realizados durante el estudio de contaminación acustica en el barrio de Ruzafa y con los datos observados y comparando los niveles sonoros con los establecidos en la ley de contaminación acústica podemos afirmar que el barrio de Ruzafa esta por encima de los estándares en todas las horas del día durante todos los días de la semana. 
+  Si, como más adelante explicaremos con los gráficos realizados durante el estudio de contaminación acústica en el barrio de Ruzafa y con los datos observados y comparando los niveles sonoros con los establecidos en la ley de contaminación acústica podemos afirmar que el barrio de Ruzafa esta por encima de los estándares en todas las horas del día durante todos los días de la semana. 
   
   3. ¿Podemos determinar horarios o patrones de ruido en los datos recogidos por los sensores?
   
@@ -232,7 +228,7 @@ df %>% head() %>% kable()
   
   Después de realizar nuestro análisis hemos concluido que si podemos detectar algunos patrones u horarios gracias a los datos recogidos por los sensores, como más adelante y durante el desarrollo del estudio veremos.
 
-Haciendo un breve resumen hemos encontrado un patron que se repite a lo largo de todas las semanas, durante los lunes, martes y miércoles tenemos los registros más bajos en cunto a decibelios, pero a medida que se acerca el jueves y el fin de semana los nivels registrados por los sonómetros se disparan.
+Haciendo un breve resumen hemos encontrado un patron que se repite a lo largo de todas las semanas, durante los lunes, martes y miércoles tenemos los registros más bajos en cunto a decibelios, pero a medida que se acerca el jueves y el fin de semana los niveles registrados por los sonómetros se disparan.
   
   4. ¿Existe alguna relación entre los días festivos en la ciudad y un cambio en la tendencia de los datos recogidos?
   
@@ -240,7 +236,7 @@ Haciendo un breve resumen hemos encontrado un patron que se repite a lo largo de
   
   Nuestra hipotesis inicial es que si existe una relación entre las festividades más importantes del barrio de Ruzafa así como las de la ciudad de Valencia. Hemos dibujado un gráfico donde agrupamos en el nivel sonoro por meses del año ya que hacer un estudio solo por días no era demásiado representativo.
   
-  Una vez con el gráfico hecho y tras analizar en más profundidad las festividades que cumplen los requisitos en cuanto a duración y calibre (gente a la que atrae la festividad, nivel de actividad en las calles debido a la fiesta en cuestiónb) de la festividad concluimos que vemos cambios significativos en el mes de marzo, cosa que esperabamos ya que en este mes se celebra una de las fiestas más importantes de Valencia, sino la más importante. Notamos un amuento en los niveles registrados ya que en estas fiestas las actividades principales són hacer mascletaes, fuegos artificiales y de más actividades que generen un alto nivel sonoro. 
+  Una vez con el gráfico hecho y tras analizar en más profundidad las festividades que cumplen los requisitos en cuanto a duración y calibre (gente a la que atrae la festividad, nivel de actividad en las calles debido a la fiesta en cuestión) de la festividad concluimos que vemos cambios significativos en el mes de marzo, cosa que esperabamos ya que en este mes se celebra una de las fiestas más importantes de Valencia, sino la más importante. Notamos un amuento en los niveles registrados ya que en estas fiestas las actividades principales són hacer mascletaes, fuegos artificiales y de más actividades que generen un alto nivel sonoro. 
   
   En contra partida nos dimos cuenta que este patrón no se seguia para el resto de festividades consideradas como la semana santa, donde se realizan procesiones y demás actividades al aire libre y podían causar un aumento en los niveles registrados por los sonómetros. Tampoco detectamos aumentos para las fiestas de navidad, ni para el periodo vacacional de verano de los calendarios lectivos. La explicación que encontramos para esto ha sido que tanto en verano como navidades o semana santa mucha gente aprovecha para volver a sus casas y estar con la familia. Y como el barrio de ruzafa esta frecuentado por gente joven o estudiantes durante estos periodos no residen en el barrio y por eso no vemos un aumento considerable en los niveles de ruido.
   
@@ -270,7 +266,6 @@ head(df) %>% kable()
 
 # Análisis de outliers
 Creamos una función para detectar Outliers, existen distintos métodos, en este caso vamos a utilizar el método 3 sigma.
-
 ```{r}
 #Esta funcíón detecta los outliers y crea una lista con valores binarios para indicarlo.
 VecTresSigma <- function(x, na.rm=T){
@@ -325,7 +320,6 @@ TresSigma <- function(x, na.rm = T){
 ```
 
 Realizamos el rastreo de outlier con respecto a las distintas calles y los representamos. Para ello hacemos uso de la primera función:
-
 ```{r}
 l_calles <- unique(df$Nombre_calle)
 
@@ -353,7 +347,6 @@ ggplot(outliers_calle, aes(calle,número_outliers)) +
 ```
 
 También podemos representar todos los datos en función de su calle, representando quales son los límites superiores he inferiores que estipula el método de detección. Para ello hemos de utilizar la segunda función.
-
 ```{r}
 sol_sigma <- TresSigma(df$valor)
 
@@ -376,14 +369,12 @@ ggplot(df, aes(Nombre_calle, valor, fill = Nombre_calle)) +
 lapply(df[3:4],unique)
 ```
 
-Como podemos ver hay muchos datos que son igual todo el rato, por lo que nos vamos a quedar con los datos que no se repiten y que nos proporcionan información. El Id, el Id del sensor y la fecha del registro no nos proporciona información, ya que lo que nos interesa en vez de estos camos es la fecha de la medición y el nombre de la calle
-
+Como podemos ver hay muchos datos que son iguales todo el rato, por lo que nos vamos a quedar con los datos que no se repiten y que nos proporcionan información. El Id, el Id del sensor y la fecha del registro no nos proporciona información, ya que lo que nos interesa en lugar de estos campos es la fecha de la medición y el nombre de la calle.
 ```{r}
 df %<>% select(Dia_medicion,tipo_medida,valor,Nombre_calle)
 ```
 
-Vamos a ver como quedan los datos
-
+Vamos a ver como quedan los datos.
 ```{r}
 head(df) %>% kable()
 summary(df) %>% kable()
@@ -393,7 +384,6 @@ Como vemos los datos se recogen desde septiembre del 2020 hasta abril del 2022.
 También se ve que el valor va desde 40 hasta casi 100, pero vemos que el rango interquartil es muy pequeño
 
 Vamos a ver si el valor se ajusta a una distribución normal:
-  
 ```{r}
 qqPlot(df$valor)
 ```
@@ -409,8 +399,7 @@ df %>% select(Dia_medicion,valor) %>% ggpairs()
 
 A parte de ver que la correlación es muy baja (0.23) Se ve que no hay datos registrados en julio.
 
-Vamos a ver como de relacionadas están las variables de el valor y el nombre de la calle
-
+Vamos a ver como de relacionadas están las variables de el valor y el nombre de la calle.
 ```{r}
 chisq.test(x = df$valor, y = df$Nombre_calle,correct = F)
 ```
@@ -418,7 +407,6 @@ chisq.test(x = df$valor, y = df$Nombre_calle,correct = F)
 Podemos ver que p es muy pequeño, por ello vemos que si que están relacionados.
 
 Seguro que el nivel sonoro está relacionado con el tipo de medicion, por eso en vez de ver la relación que hay entre ellas vamos a ver como de relacionado están los valores entre sí en función del tipo de medición:
-  
 ```{r}
 noms = unique(df$tipo_medida)
 df %>% spread(key = tipo_medida, value = valor) %>% select(noms) %>% ggpairs()
@@ -433,14 +421,12 @@ df %>% spread(key = tipo_medida, value = valor) %>% select(noms) %>% ggcorr()
 Como vemos en esta forma más gráfica no es mucha la diferencia entre las correlaciones, y también se ve que son correlaciones muy elevadas
 
 # Desarrollo del proyecto
-Vamos a comenzar con el estudio de los datos sin hacer disticiones en las calles, para ello crearemos un nuevo df con la media por dias de cada uno de las distintas medidas
-
+Vamos a comenzar con el estudio de los datos sin hacer disticiones en las calles, para ello crearemos un nuevo df con la media por dias de cada uno de las distintas medidas.
 ```{r}
 total = df %>% group_by(tipo_medida, Dia_medicion) %>% summarise(valor = mean(valor)) %>% select(Dia_medicion,tipo_medida,valor)
 ```
 
-Vamos a ver como evoluciona la contaminación sonora según el día de la semana.
-
+Veamos como evoluciona la contaminación sonora según el día de la semana.
 ```{r}
 dias = c("lunes","martes","miércoles","jueves","viernes","sábado","domingo")
 total %>%
@@ -466,11 +452,11 @@ total %>%
 *Explicación y comentarios*
 A simple vista podemos observar como a lo largo de los días de la semana los niveles de ruido tienen un comportamiento muy similar, todos siguen un patrón, donde decaen el martes pero a partir de ahí van en aumento hasta el domingo, sobre todo desde los jueves por la tarde hasta los sábados noche. 
 
-Esto nos indica que a medida que avanza la semana, el barrio de ruzafa se vuelve más ruidoso. Si nos damos cuenta esto coincide con los días en los que es más "típico" salir de fiesta y por tanto vemos como evolucionan aumentando el sonido a medida que llegan estos días dado que ruzafa es un barrio repleto de bares, terrazas y lugares de ocio. Sin hacer ningún tipo de estudio en el tipo de personas que frecuentan el barrio de Ruzafa hemos concluido que muy posiblemente se trate de personas jovenes, esta conclusión la extraemos al observar que los niveles de ruido aumentan considerablemente cuando se acercan los fines de semana momento que se corresponde con una mayor actividad de los jòvenes y del ocio nocturno donde las principales actividades del sector se desempeñan habitualmente de jueves a sábado.
+Esto nos indica que a medida que avanza la semana, el barrio de ruzafa se vuelve más ruidoso. Si nos damos cuenta esto coincide con los días en los que es más "típico" salir de fiesta y por tanto vemos como evolucionan aumentando el sonido a medida que llegan estos días dado que ruzafa es un barrio repleto de bares, terrazas y lugares de ocio. Sin hacer ningún tipo de estudio en el tipo de personas que frecuentan el barrio de Ruzafa hemos concluido que muy posiblemente se trate de personas jovenes, esta conclusión la extraemos al observar que los niveles de ruido aumentan considerablemente cuando se acercan los fines de semana momento que se corresponde con una mayor actividad de los jóvenes y del ocio nocturno donde las principales actividades del sector se desempeñan habitualmente de jueves a sábado.
 
 Ahora vamos a darle un enfoque diferente, veamos si el barrio de Ruzafa cumple con la normativa actual de ruidos. Si consultamos el anexo II de la "Ley 7/2002, de 3 de diciembre, de protección contra la contaminación acústica", encontraremos la siguiente tabla:
 
-[](data/table_db_externos.png)
+![](data/table_db_externos.png)
 
 Esta hace referencia al nivel sonoro diurno y nocoturno para cada tipo de uso, en nuestro caso el barrio de Ruzafa lo tomaremos como una zona residencial.
 
@@ -479,7 +465,7 @@ Ahora si nos fijamos en el gráfico en la evolución de dichos niveles podemos o
 Con esto podemos afirmar que en el barrio de Ruzafa existe una gran cantidad de contaminación acústica y que se debería tratar de tomar medidas para reducir estos niveles de ruido a los que nos indica la ley.
 
 
-Vamos a ver como evoluciona a lo largo de los meses. Se utilizará solo el nivel sonoro continuo equivalente
+Vamos a ver como evoluciona a lo largo de los meses. Se utilizará solo el nivel sonoro continuo equivalente.
 ```{r}
 meses = c("enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiempre","octubre","noviembre","diciembre")
 grafico = total %>%
@@ -509,7 +495,7 @@ En este gráfio hemos representado el nivel sonoro continuo equivalente por mese
 
 La primera cosa a tener en cuenta es que no tenemos registros para el mes de julio, pero quitando esta salvedad, de este gráfico podemos extraer las siguientes conclusiones.
 
-Al ser una representación por meses lo primero que nos vino a la cabeza al ver el gráfico fue la hipostesis de que en los meses que más elevado era el nivel sonoro debian corresponderse con los meses que tuvieran festividades destacables en el barrio de Ruzafa. Así pues nos pusimos a buscar las festividades del barrio de ruzafa (solo las más reseñables) ya que necesitabamos festividades con el suficiente impacto y duración como para alterar la estadistica de sonido de un mes completo. De este modo encontramos las siguientes festividades que podrian ser útiles para la corroboración de nuestra hipotesis:
+Al ser una representación por meses lo primero que nos vino a la cabeza al ver el gráfico fue la hipostesis de que en los meses que más elevado era el nivel sonoro debian corresponderse con los meses que tuvieran festividades destacables en el barrio de Ruzafa. Así pues nos pusimos a buscar las festividades del barrio de ruzafa (solo las más reseñables) ya que necesitabamos festividades con el suficiente impacto y duración como para alterar la estadística de sonido de un mes completo. De este modo encontramos las siguientes festividades que podrian ser útiles para la corroboración de nuestra hipotesis:
 
   + Vacaciones de navidad del 23/12 al 07/01
   
@@ -519,23 +505,23 @@ Al ser una representación por meses lo primero que nos vino a la cabeza al ver 
   
 Después de no encontrar muchas fiestas lo suficientemente grandes como para alterar el nivel de decibelios de un mes completo decidimos analizar las que teniamos y dar nuestras conclusiones al respecto.
 
-Si nos damos cuenta nuestra hipostesis de que en las festividades más grandes debia haber un nivel de ruido mayor, realmente solo se cumple en el mes de marzo con la festividad de las fallas en éste. Pero obviamente un solo caso no indica nada y más conociendo la festividad de las fallas. Festividad donde las actividades principales son el lanzamiento de petardos, tracas, castillos, mascletaes y fuegos artificiales entre otros. Todos estos modifican de manera considerable el nivel sonoro del barrio en el mes de marzo.
+Si nos damos cuenta nuestra hipostesis de que en las festividades más grandes debía haber un nivel de ruido mayor, realmente solo se cumple en el mes de marzo con la festividad de las fallas en éste. Pero obviamente un solo caso no indica nada y más conociendo la festividad de las fallas. Festividad donde las actividades principales son el lanzamiento de petardos, tracas, castillos, mascletaes y fuegos artificiales entre otros. Todos estos modifican de manera considerable el nivel sonoro del barrio en el mes de marzo.
 
-Es más en el mes siguiente, abril, podemos ver un descenso muy considerble en los niveles de ruido convirtiendose en el més mas silencioso del año en el barrio de Ruzafa. Esto no concuerda tampoco con nuestra hipotesis ya que en el mes de abril nos encontramos con otra festividad lo suficientemente grande como para pensar que elevaria los niveles sonoros por encima de la media.
+Es más, en el mes siguiente, abril, podemos ver un descenso muy considerble en los niveles de ruido convirtiendose en el segundo més mas silencioso del año en el barrio de Ruzafa. Esto no concuerda tampoco con nuestra hipotesis ya que en el mes de abril nos encontramos con otra festividad lo suficientemente grande como para pensar que elevaria los niveles sonoros por encima de la media.
+
+Y para las fiestas de navidad o encontramos con niveles en la media para el mes de diciembre y con el mes más silencioso del año para enero.
 
 Así pues concluimos que nuestr hipotesis inicial era falsa, y que no son suficientes estas festividades como para elevar los niveles sonoros por encima de la media en el barrio.
 
-Pero había que investrigar entonces los dos casos raros que nos quedaban en el gráfico, el mes de abril, como podia ser el más silencioso? Y por otra parte septiembre, como podia tener unos niveles de ruido tan elevados distanciandose solo 1db por debajo del mes de las Fallas?
+Pero había que investrigar entonces los dos casos raros que nos quedaban en el gráfico, el mes de abril, como podia ser tan silencioso habiendo una festividad como la semana santa donde se realizan muchas actividades al aire libre? Y por otra parte septiembre, como podia tener unos niveles de ruido tan elevados distanciandose en solo 1db por debajo del mes de las Fallas?
 
 Nos pusimos a investigar y concluimos que:
 
-Es popsible que los niveles sonoros sean menores en el mes de abril debido a que después de un mes como marzo, con las fallas, es posible que la gente prefiera un entorno más tranquilo y por ello tranten de hacer menos ruido. Por otra parte también es posible que en el mes de abril debido a que la festividad de semana santa es una festividad en la que la gentre prefiere irse fuera a la comunidad autonoma de andalucia porque allí la fiesta se v ive mucho más es posible que el barrio de Ruzafa este menos transitado durante este mes y por eso encontramos que es el mes mas silencioso.
+Es posible que los niveles sonoros sean menores en el mes de abril debido a que después de un mes como marzo, con las fallas, la gente prefiera un entorno más tranquilo y por ello tranten de hacer menos ruido. Por otra parte también es posible que en el mes de abril debido a que la festividad de semana santa es una festividad en la que la gentre prefiere irse fuera, a la comunidad autónoma de andalucia porque allí la fiesta se vive mucho más, es posible que el barrio de Ruzafa este menos transitado durante este mes y por eso encontramos que es tan silencioso.
 
-El otro caso que se sale de la media es septiembre, aqui hemos encontrado dos posibilidades:
+El otro caso que se sale de la media es septiembre:
 
-Como el gráfico hace referencia al año 2021 en el mes de septiembre de ese año se celebraron las fiestas de las fallas que no se pudieron celebrar en el mes de marzo anterior. Pero esto no dejaría sin una explicación razonable para porque el mes de marzo fue tan tuidoso si no hubo ceebración de fallas.
-
-La otra explicación que encontramos al alto nivel sonoro del mes de septiembre es que en éste mes empiezan las clases en todos los niveles educativos y como ruzafa es un barrio frecuentado por gente joven, estudiantes en su gran mayoria y tiene muchas zonas de ocio es posible que con la vuelta a las clases haya una mayor actividad en las calles y por eso los sonómetros registren valores tan elevados. 
+La explicación más lógica que encontramos al alto nivel sonoro del mes de septiembre es que en este mes empiezan las clases en todos los niveles educativos y como ruzafa es un barrio frecuentado por gente joven, estudiantes en su gran mayoria y tiene muchas zonas de ocio es posible que con la vuelta a las clases haya una mayor actividad en las calles y por eso los sonómetros registren valores tan elevados. 
 
 Ahora vamos a continuar viendo la evolución del ruido por dias segun las calles
 ```{r}
