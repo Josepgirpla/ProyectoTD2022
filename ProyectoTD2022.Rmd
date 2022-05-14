@@ -44,7 +44,7 @@ El repositorio se encunetra en el siguinete enlace: https://github.com/Josepgirp
 Los ficheros han sido almacenados en la carpeta ./data contenida en el proyecto
 
 # Importación y fusión de los datos
-Importamos los datos descargados en distintos dataframes.
+Importamos los datos descargados en distintos dataframes. Usando la función read_csv, y cambiando el tipo de la columna dateObserved a fecha
 ```{r}
 
 Cadiz_3 <- read_csv("data/Cadiz_3.csv",
@@ -91,7 +91,7 @@ Vivons_Chaflan_Cadiz <- read_csv("data/Vivons_Chaflan_Cadiz.csv",
 ```
 
 
-Manipulamos los datos para obtener un solo dataframe bien estructurado.
+Manipulamos los datos para obtener un solo dataframe bien estructurado, añadiendo una columna con el nombre de la calle.
 ```{r}
 #Añadimos una columna que contenga el nombre de la calle para poder identificarlas despues.
 Cadiz_16 <- cbind(Cadiz_16, Nombre_calle = c("Cadiz_16"))
@@ -144,7 +144,7 @@ df %>% summary %>% kable()
 
 ```
 
-Para terminar con este apartado vamos a realizar un análisis de los valores especiales o inconsistencias que puedan aparecer en nuestro dataframe.
+Para terminar con este apartado vamos a realizar un análisis de los valores especiales o inconsistencias que puedan aparecer en nuestro dataframe, ya que como podemos ver en el summary anterior nos sale que hay valores infinitos, que los vamos a reemplazar por la media.
 ```{r}
 #Primero vamos a determinar si hay o no datos especiales.
 
@@ -258,7 +258,7 @@ Si quisieramos saber quien es el causante de un ruido excesivamente alto, necesi
 
 # Acondicionamiento de los datos para que se correspondan con un tidy dataset.
 
-Vamos a hacerlo tidy
+Vamos a hacerlo tidy usando la función gather.
 ```{r}
 df <- df %>% gather(key= "tipo_medida", value = "valor", 6:10)
 head(df) %>% kable()
@@ -319,7 +319,7 @@ TresSigma <- function(x, na.rm = T){
 }
 ```
 
-Realizamos el rastreo de outlier con respecto a las distintas calles y los representamos. Para ello hacemos uso de la primera función:
+Realizamos el rastreo de outlier con respecto a las distintas calles y los representamos.
 ```{r}
 l_calles <- unique(df$Nombre_calle)
 
@@ -346,7 +346,7 @@ ggplot(outliers_calle, aes(calle,número_outliers)) +
 
 ```
 
-También podemos representar todos los datos en función de su calle, representando quales son los límites superiores he inferiores que estipula el método de detección. Para ello hemos de utilizar la segunda función.
+También podemos representar todos los datos en función de su calle, representando quales son los límites superiores he inferiores que estipula el método de detección.
 ```{r}
 sol_sigma <- TresSigma(df$valor)
 
@@ -365,11 +365,13 @@ ggplot(df, aes(Nombre_calle, valor, fill = Nombre_calle)) +
 
 # Analisis univariante
 
+Vamos a ver los valores únicos de las columnas Servicio_sensor y Tipo_entidad_sensor
 ```{r}
 lapply(df[3:4],unique)
 ```
 
 Como podemos ver hay muchos datos que son iguales todo el rato, por lo que nos vamos a quedar con los datos que no se repiten y que nos proporcionan información. El Id, el Id del sensor y la fecha del registro no nos proporciona información, ya que lo que nos interesa en lugar de estos campos es la fecha de la medición y el nombre de la calle.
+
 ```{r}
 df %<>% select(Dia_medicion,tipo_medida,valor,Nombre_calle)
 ```
@@ -383,7 +385,7 @@ summary(df) %>% kable()
 Como vemos los datos se recogen desde septiembre del 2020 hasta abril del 2022.
 También se ve que el valor va desde 40 hasta casi 100, pero vemos que el rango interquartil es muy pequeño
 
-Vamos a ver si el valor se ajusta a una distribución normal:
+Vamos a ver si el valor se ajusta a una distribución normal con la función qqPlot:
 ```{r}
 qqPlot(df$valor)
 ```
@@ -421,7 +423,7 @@ df %>% spread(key = tipo_medida, value = valor) %>% select(noms) %>% ggcorr()
 Como vemos en esta forma más gráfica no es mucha la diferencia entre las correlaciones, y también se ve que son correlaciones muy elevadas
 
 # Desarrollo del proyecto
-Vamos a comenzar con el estudio de los datos sin hacer disticiones en las calles, para ello crearemos un nuevo df con la media por dias de cada uno de las distintas medidas.
+
 ```{r}
 total = df %>% group_by(tipo_medida, Dia_medicion) %>% summarise(valor = mean(valor)) %>% select(Dia_medicion,tipo_medida,valor)
 ```
