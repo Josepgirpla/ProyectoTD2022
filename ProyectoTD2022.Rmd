@@ -12,7 +12,7 @@ output:
 
 Cargamos las librerias necesarias.
 
-```{r}
+```{r include = F, echo=F}
 #Cargamos todas las librerias necesarias para trabajar.
 packages=c("tidyverse", "knitr", "ggplot2", "datasets", "RColorBrewer", "dplyr", "readr", "tidyr","lubridate","gganimate","plotly","png","ggpubr","colorspace","magrittr","car","GGally")
 
@@ -25,7 +25,7 @@ package.check <- lapply(packages, FUN=function(x) {
     library(x, character.only=TRUE)
   }
 })
-opts_chunk$set(echo=T, message = F, error = T, warning = T, comment = NA, fig.align = 'center', dpi = 200, tidy = F, cache.path = '.cache/', fig.path = './figura/')
+opts_chunk$set(include = T, echo=F, message = F, error = T, warning = F, comment = NA, eval = T, fig.align = 'center', dpi = 200, tidy = F, cache.path = '.cache/', fig.path = './figura/')
 # verify they are loaded
 search()
 ```
@@ -142,8 +142,8 @@ colnames(df) <- c("Id", "Fecha_registro", "Servicio_sensor", "Tipo_entidad_senso
                   "Nivel_sonoro_dia_tarde_noche", "Nivel_sonoro_tarde",
                   "Nivel_sonoro_noche", "Dia_medicion", "Nombre_calle")
 
-head(df)
-summary(df)
+df %>% head() %>% kable()
+df %>% summary %>% kable()
 
 ```
 
@@ -209,7 +209,7 @@ for (n in as.factor(colnames(df))){
     }
 }
 
-head(df)
+df %>% head() %>% kable()
 ```
 
 ## Preguntas a reponder en el proyecto
@@ -248,10 +248,10 @@ head(df)
 Vamos a hacerlo tidy
 ```{r}
 df <- df %>% gather(key= "tipo_medida", value = "valor", 6:10)
-head(df)
+head(df) %>% kable()
 ```
 
-#Análisis de outliers
+# Análisis de outliers
 Creamos una función para detectar Outliers, existen distintos métodos, en este caso vamos a utilizar el método 3 sigma.
 
 ```{r}
@@ -325,8 +325,13 @@ for (calle in l_calles){
 
 colnames(outliers_calle) = c("calle", "número_outliers")
 
+outliers_calle %<>% mutate(número_outliers = as.numeric(número_outliers))
+
 #Podemos representar el número de outliers por calle mediante un diagrama de barras.
-ggplot(outliers_calle, aes(número_outliers, calle)) +  geom_point()
+ggplot(outliers_calle, aes(calle,número_outliers)) +  
+  geom_point() + 
+  theme(axis.text.x = element_text(angle = 20, size = 6,hjust = 1, vjust = 1)) +
+  labs(title = "Outliers", y = "", x = "Calle", subtitle = "Número de outliers en función de la calle según la regla del 3 sigma")
 
 ```
 
@@ -335,14 +340,17 @@ También podemos representar todos los datos en función de su calle, representa
 ```{r}
 sol_sigma <- TresSigma(df$valor)
 
-#Mediante un diagrama de puntos.
-ggplot(df, aes(Nombre_calle, valor)) + geom_point(alpha = 0.05, col = "blue" ) + coord_flip()  + geom_hline(yintercept = sol_sigma[3], col = "red", linetype = 1) + geom_hline(yintercept = sol_sigma[4], , col = "blue", linetype = 1) + geom_hline(yintercept = sol_sigma[1], , col = "green", linetype = 2) + theme_bw()
-
 #Mediante diagrama de violin.
-ggplot(df, aes(Nombre_calle, valor)) +  geom_violin() + coord_flip() + theme(axis.text = element_text(size = 7)) + geom_hline(yintercept = sol_sigma[3]) + geom_hline(yintercept = sol_sigma[4])+ geom_hline(yintercept = sol_sigma[1], , col = "green", linetype = 2)  + theme_bw()
-
-
-plot(df$valor)
+ggplot(df, aes(Nombre_calle, valor, fill = Nombre_calle)) +  
+  geom_violin() + 
+  coord_flip() + 
+  theme(axis.text = element_text(size = 7)) + 
+  geom_hline(yintercept = sol_sigma[3], col = "red") + 
+  geom_hline(yintercept = sol_sigma[4], col = "blue") + 
+  geom_hline(yintercept = sol_sigma[1], col = "green", linetype = 2)  +
+  theme_bw() +
+  theme(legend.position='none') +
+  labs(x = "", y = "", title = "Nivel de sonido en las calles", subtitle = "Nivel de sonido en función de las calles y donde marcamos la línea de los outliers")
 ```
 
 # Analisis univariante
@@ -395,14 +403,14 @@ Podemos ver que p es muy pequeño, por ello vemos que si que están relacionados
 Seguro que el nivel sonoro está relacionado con el tipo de medicion, por eso en vez de ver la relación que hay entre ellas vamos a ver como de relacionado están los valores entre sí en función del tipo de medición:
   
 ```{r}
-nombres = unique(df$tipo_medida)
-df %>% spread(key = tipo_medida, value = valor) %>% select(nombres) %>% ggpairs()
+noms = unique(df$tipo_medida)
+df %>% spread(key = tipo_medida, value = valor) %>% select(noms) %>% ggpairs()
 ```
 
 Como podemos ver la mayor correlación está entre el nivel sonoro del día y el nivel continuo equivalente
 
 ```{r}
-df %>% spread(key = tipo_medida, value = valor) %>% select(nombres) %>% ggcorr()
+df %>% spread(key = tipo_medida, value = valor) %>% select(noms) %>% ggcorr()
 ```
 
 Como vemos en esta forma más gráfica no es mucha la diferencia entre las correlaciones, y también se ve que son correlaciones muy elevadas
@@ -546,4 +554,26 @@ df %>%
   labs(title = "Distribución de sonidos en función del mes y el lugar", subtitle = "{current_frame}", x = element_blank(), y = element_blank())
 ```
 
+Segun la tabla 1 del anexo II del BOE del 23 de enero del año 2020 (https://www.boe.es/boe/dias/2020/01/23/pdfs/BOE-A-2020-1010.pdf)
+el sonido máximo permitido es de 55dB en zonas residenciales y 65 en terciarias(durante el día), dado que ne ruzafa hay ambas mostraremos las dos. Para la noche los niveles máximos son 45dB en zonas residenciales y 45 en terciarias.
+
+```{r}
+total %>% filter(tipo_medida == "Nivel_sonoro_dia") %>% ggplot(aes(x = valor))+
+  geom_histogram()+
+  geom_vline(xintercept = 55, col = 2) +
+  geom_vline(xintercept = 65, col = 2) +
+  geom_text(aes(55,-10,label = "Residencial")) +
+  geom_text(aes(65,-10,label = "Terciario")) +
+  labs(x = "Decibelios", y = "", title = "Nivel sonoro máximo", subtitle = "Nivel sonoro máximo durante el día segun la legislación en función de si es zona residencial o terciaria")
+```
+
+```{r}
+total %>% filter(tipo_medida == "Nivel_sonoro_noche") %>% ggplot(aes(x = valor))+
+  geom_histogram()+
+  geom_vline(xintercept = 45, col = 2) +
+  geom_vline(xintercept = 55, col = 2) +
+  geom_text(aes(45,-10,label = "Residencial")) +
+  geom_text(aes(55,-10,label = "Terciario")) +
+  labs(x = "Decibelios", y = "", title = "Nivel sonoro máximo", subtitle = "Nivel sonoro máximo durante la noche segun la legislación en función de si es zona residencial o terciaria")
+```
 
