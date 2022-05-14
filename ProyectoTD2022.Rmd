@@ -227,6 +227,13 @@ df %>% head() %>% kable()
   Si, como más adelante explicaremos con los gráficos realizados durante el estudio de contaminación acustica en el barrio de Ruzafa y con los datos observados y comparando los niveles sonoros con los establecidos en la ley de contaminación acústica podemos afirmar que el barrio de Ruzafa esta por encima de los estándares en todas las horas del día durante todos los días de la semana. 
   
   3. ¿Podemos determinar horarios o patrones de ruido en los datos recogidos por los sensores?
+  
+  *Respuesta*
+  
+  Después de realizar nuestro análisis hemos concluido que si podemos detectar algunos patrones u horarios gracias a los datos recogidos por los sensores, como más adelante y durante el desarrollo del estudio veremos.
+
+Haciendo un breve resumen hemos encontrado un patron que se repite a lo largo de todas las semanas, durante los lunes, martes y miércoles tenemos los registros más bajos en cunto a decibelios, pero a medida que se acerca el jueves y el fin de semana los nivels registrados por los sonómetros se disparan.
+  
   4. ¿Existe alguna relación entre los días festivos en la ciudad y un cambio en la tendencia de los datos recogidos?
   
   *Respuesta*
@@ -240,8 +247,18 @@ df %>% head() %>% kable()
   Por tanto podemos concluir que nuestra hipotesis inicial no era correcta.
   
   5. ¿Podemos tratar de deducir el provocante de un ruido anormal a partir de la posición de un sensor?
+  
+  *Respuesta*
+  
+  Con los datos que tenemos y el estudio realizado sobre ellos, creemos que no es posible deducir que provoca un ruido anormal, ya que los sonómetros solo registran el nivel de decibelios y por tanto por su ubicación es difícil saber si el provocante es un coche que hace ruido excesivo, una discusión en un bar, alguien gritando, o cualquier actividad que genere un ruido por encima de lo que consideramos normal (unos 55db aprox).
+
+Si quisieramos saber quien es el causante de un ruido excesivamente alto, necesitariamos ubicar los sonómetros en lugares muy específicos y hacer análisis de cada sonómetro en cocnreto. Así de este modo con el sonómetro colocado en una ubicación muy concreta y realizando un estudio sobre los datos recogidos por el sonómetro tal vez podríamos hacernos una idea de quien o que son los causantes de los registros anormales. E incluso así creemos que influyen demasiadas variables como para saber que causa un sonido anormal recogiendo solo el nivel de db emitido.
+  
   6. Con los datos proporcionados, ¿Es posible realizar un mapa de ruido?
 
+  *Respuesta*
+  
+  Si es posible realizar un mapa de ruido del barrio de Ruzafa a partir de los datos obtenidos, más adelante encontraremos dicho mapa.
 
 # Acondicionamiento de los datos para que se correspondan con un tidy dataset.
 
@@ -452,13 +469,14 @@ A simple vista podemos observar como a lo largo de los días de la semana los ni
 Esto nos indica que a medida que avanza la semana, el barrio de ruzafa se vuelve más ruidoso. Si nos damos cuenta esto coincide con los días en los que es más "típico" salir de fiesta y por tanto vemos como evolucionan aumentando el sonido a medida que llegan estos días dado que ruzafa es un barrio repleto de bares, terrazas y lugares de ocio. Sin hacer ningún tipo de estudio en el tipo de personas que frecuentan el barrio de Ruzafa hemos concluido que muy posiblemente se trate de personas jovenes, esta conclusión la extraemos al observar que los niveles de ruido aumentan considerablemente cuando se acercan los fines de semana momento que se corresponde con una mayor actividad de los jòvenes y del ocio nocturno donde las principales actividades del sector se desempeñan habitualmente de jueves a sábado.
 
 Ahora vamos a darle un enfoque diferente, veamos si el barrio de Ruzafa cumple con la normativa actual de ruidos. Si consultamos el anexo II de la "Ley 7/2002, de 3 de diciembre, de protección contra la contaminación acústica", encontraremos la siguiente tabla:
+
 [](data/table_db_externos.png)
+
 Esta hace referencia al nivel sonoro diurno y nocoturno para cada tipo de uso, en nuestro caso el barrio de Ruzafa lo tomaremos como una zona residencial.
 
 Ahora si nos fijamos en el gráfico en la evolución de dichos niveles podemos observar con facilidad que para ningún día de la semana están por debajo del nivel legal.
 
 Con esto podemos afirmar que en el barrio de Ruzafa existe una gran cantidad de contaminación acústica y que se debería tratar de tomar medidas para reducir estos niveles de ruido a los que nos indica la ley.
-
 
 
 Vamos a ver como evoluciona a lo largo de los meses. Se utilizará solo el nivel sonoro continuo equivalente
@@ -489,6 +507,8 @@ ggplotly(grafico, height = 350, width=600)
 ```
 En este gráfio hemos representado el nivel sonoro continuo equivalente por meses en el barrio de Ruzafa.
 
+La primera cosa a tener en cuenta es que no tenemos registros para el mes de julio, pero quitando esta salvedad, de este gráfico podemos extraer las siguientes conclusiones.
+
 Al ser una representación por meses lo primero que nos vino a la cabeza al ver el gráfico fue la hipostesis de que en los meses que más elevado era el nivel sonoro debian corresponderse con los meses que tuvieran festividades destacables en el barrio de Ruzafa. Así pues nos pusimos a buscar las festividades del barrio de ruzafa (solo las más reseñables) ya que necesitabamos festividades con el suficiente impacto y duración como para alterar la estadistica de sonido de un mes completo. De este modo encontramos las siguientes festividades que podrian ser útiles para la corroboración de nuestra hipotesis:
 
   + Vacaciones de navidad del 23/12 al 07/01
@@ -499,7 +519,7 @@ Al ser una representación por meses lo primero que nos vino a la cabeza al ver 
   
 Después de no encontrar muchas fiestas lo suficientemente grandes como para alterar el nivel de decibelios de un mes completo decidimos analizar las que teniamos y dar nuestras conclusiones al respecto.
 
-Si nos damos cuenta nuestra hipostesis de que en las festividades más grandes debia haber un nivel de ruido mayor, realmente solo se cumple en e mes de marzo con la festividad de las fallas en éste. Pero obviamente un solo caso no indica nada y más conociendo la festividad de las fallas. festividad donde la actividad principal son el lanzamiento de petardos, tracas, castillos, mascletaes y fuegos artificiales entre otros. Todos estos modifican de manera considerable el nivel sonoro del barrio en el mes de marzo.
+Si nos damos cuenta nuestra hipostesis de que en las festividades más grandes debia haber un nivel de ruido mayor, realmente solo se cumple en el mes de marzo con la festividad de las fallas en éste. Pero obviamente un solo caso no indica nada y más conociendo la festividad de las fallas. Festividad donde las actividades principales son el lanzamiento de petardos, tracas, castillos, mascletaes y fuegos artificiales entre otros. Todos estos modifican de manera considerable el nivel sonoro del barrio en el mes de marzo.
 
 Es más en el mes siguiente, abril, podemos ver un descenso muy considerble en los niveles de ruido convirtiendose en el més mas silencioso del año en el barrio de Ruzafa. Esto no concuerda tampoco con nuestra hipotesis ya que en el mes de abril nos encontramos con otra festividad lo suficientemente grande como para pensar que elevaria los niveles sonoros por encima de la media.
 
@@ -553,6 +573,10 @@ df %>%
   transition_manual(frames = mes) +
   labs(title = "Distribución de sonidos en función del mes y el lugar", subtitle = "{current_frame}", x = element_blank(), y = element_blank())
 ```
+Representación del mapa de ruidos por mes del barrio de ruzafa.
+
+Este tipo de representaciones o mapas son muy útiles para determinar el grado de exposición de las personas a ciertos ruidos así como para realizar un correcto diagnóstico del ruido ambiental en una zona. De este modo es más fácil analizar el problema de la contaminación acústica por zonas y poder plantear medidas para evitar esta contaminación.
+
 
 Segun la tabla 1 del anexo II del BOE del 23 de enero del año 2020 (https://www.boe.es/boe/dias/2020/01/23/pdfs/BOE-A-2020-1010.pdf)
 el sonido máximo permitido es de 55dB en zonas residenciales y 65 en terciarias(durante el día), dado que ne ruzafa hay ambas mostraremos las dos. Para la noche los niveles máximos son 45dB en zonas residenciales y 45 en terciarias.
