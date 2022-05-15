@@ -485,6 +485,8 @@ grafico = total %>%
   #Se hace una columna con el mes
   mutate(mes = meses[mes_num]) %>%
   mutate(mes = factor(mes,ordered = T, levels = meses)) %>%
+  ungroup() %>%
+  add_row(tipo_medida = NA,valor = 0,mes_num = 7,mes ="julio") %>%
   #Se hace el gráfico en función del tipo del mes
   ggplot(aes(x = mes, y = valor, fill = mes)) + 
   geom_bar(stat="identity") + 
