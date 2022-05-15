@@ -571,25 +571,41 @@ Este tipo de representaciones o mapas son muy útiles para determinar el grado d
 Segun la tabla 1 del anexo II del BOE del 23 de enero del año 2020 (https://www.boe.es/boe/dias/2020/01/23/pdfs/BOE-A-2020-1010.pdf)
 el sonido máximo permitido es de 55dB en zonas residenciales y 65 en terciarias(durante el día), dado que ne ruzafa hay ambas mostraremos las dos. Para la noche los niveles máximos son 45dB en zonas residenciales y 45 en terciarias.
 
+Tmbién podemos ver que la OMS considera ruido todo aquello que supere los 65 db durante el día y los 55 durante la noche como vemos en este artículo de El Pais(https://elpais.com/elpais/2019/01/14/seres_urbanos/1547477803_448315.html#:~:text=La%20OMS%20considera%20ruido%20cualquier,exceder%20de%20los%2045%20decibelios.)
+
+
 ```{r}
 total %>% filter(tipo_medida == "Nivel_sonoro_dia") %>% ggplot(aes(x = valor))+
   geom_histogram()+
-  geom_vline(xintercept = 55, col = 2) +
-  geom_vline(xintercept = 65, col = 2) +
-  geom_text(aes(55,-10,label = "Residencial")) +
-  geom_text(aes(65,-10,label = "Terciario")) +
+  geom_vline(xintercept = 55, col = "Orange") +
+  geom_vline(xintercept = 65, col = "Red") +
+  geom_text(aes(58,-10,label = "Residencial")) +
+  geom_text(aes(69.3,-10,label = "Terciario y OMS")) +
   labs(x = "Decibelios", y = "", title = "Nivel sonoro máximo", subtitle = "Nivel sonoro máximo durante el día segun la legislación en función de si es zona residencial o terciaria")
 ```
 
 ```{r}
 total %>% filter(tipo_medida == "Nivel_sonoro_noche") %>% ggplot(aes(x = valor))+
   geom_histogram()+
-  geom_vline(xintercept = 45, col = 2) +
-  geom_vline(xintercept = 55, col = 2) +
-  geom_text(aes(45,-10,label = "Residencial")) +
-  geom_text(aes(55,-10,label = "Terciario")) +
+  geom_vline(xintercept = 45, col = "Orange") +
+  geom_vline(xintercept = 55, col = "Red") +
+  geom_text(aes(49,-10,label = "Residencial")) +
+  geom_text(aes(60.5,-10,label = "Terciario y OMS")) +
   labs(x = "Decibelios", y = "", title = "Nivel sonoro máximo", subtitle = "Nivel sonoro máximo durante la noche segun la legislación en función de si es zona residencial o terciaria")
 ```
+Por último vamos a observar como ha evolucinado el sonido a lo largo del tiempo, tando del día como de la tarde y la noche.
+
+```{r}
+grafico = total %>% 
+  filter(tipo_medida == c("Nivel_sonoro_dia","Nivel_sonoro_tarde","Nivel_sonoro_noche")) %>% 
+  ggplot(aes(x = Dia_medicion, y = valor)) + 
+  geom_point()+
+  facet_grid(rows = vars(tipo_medida))+
+  geom_smooth() +
+  labs(y = "Decibelios", x = "Fecha", title = "Progresión del sonido a lo largo del tiempo", subtitle = "Como evolucvionan las distintas medidas\ndel tiempo en función de la fecha")
+ggplotly(grafico,height = 500, width=800)
+```
+
 
 # Conclusiones
 
