@@ -13,7 +13,7 @@ output:
 Cargamos las librerias necesarias.
 ```{r include = F, echo=F}
 #Cargamos todas las librerias necesarias para trabajar.
-packages=c("tidyverse", "knitr", "ggplot2", "datasets", "RColorBrewer", "dplyr", "readr", "tidyr","lubridate","gganimate","plotly","png","ggpubr","colorspace","magrittr","car","GGally")
+packages=c("tidyverse", "knitr", "ggplot2", "datasets", "RColorBrewer", "dplyr", "readr", "tidyr","lubridate","gganimate","plotly","png","ggpubr","colorspace","magrittr","car","GGally","jsonlite")
 
 # use this function to check if each package is on the local machine
 # if a package is installed, it will be loaded
