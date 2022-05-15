@@ -265,23 +265,27 @@ head(df) %>% kable()
 ```
 
 # Análisis de outliers
-Creamos una función para detectar Outliers, existen distintos métodos, en este caso vamos a utilizar el método 3 sigma.
+Creamos una función para detectar Outliers, existen distintos métodos, como observaremos más adelante nuestros datos no siguen una distribución normal o gaussiana. Es por ello que vamos a utilizar la regla del percentil, apta para nuestros datos y sin una agresividad demasiado elevada.
 ```{r}
 #Esta funcíón detecta los outliers y crea una lista con valores binarios para indicarlo.
-VecTresSigma <- function(x, na.rm=T){
-  media = mean(x, na.rm=na.rm)
-  sigma = sd(x, na.rm=na.rm)
-  LimInf = media - 3*sigma
-  LimSup = media + 3*sigma
-
-  v_resultado = c()
+VecPercentil = reglaboxplot <- function(x, na.rm = T){
   
-  for (e in x){
-    if (!is.na(e)){
-      if (e < LimInf){
+  q5 = quantile(x, 0.05, na.rm=na.rm)
+  q95 = quantile(x, 0.95, na.rm=na.rm)
+  
+  iqr = IQR(x, na.rm=na.rm)
+  
+  LimInf = q5 - 1.5*iqr
+  LimSup = q95 + 1.5*iqr
+  
+  v_resultado=c()
+  
+  for (n in x){
+    if (!is.na(n)){
+      if (n < LimInf){
         v_resultado = c(v_resultado, T)
       }else{
-        if (e > LimSup){
+        if (n > LimSup){
           v_resultado = c(v_resultado, T)
         }else{
           v_resultado = c(v_resultado, F)
@@ -289,33 +293,34 @@ VecTresSigma <- function(x, na.rm=T){
       }
     }
     else{
-      v_resultado = c(v_resultado, NA)
+      v_resultado=c(v_resultado, NA)
     }
   }
-
+  
   return (v_resultado)
 }
 
 #Esta función obtiene y devuelve una serie de valores de interes como son, el limite inferior y superior de los outliers, los valores maximos fuera y dentro de este rango y el numero de elementos que se encuentran dentro del rango.
-TresSigma <- function(x, na.rm = T){
+Percentil <- function(x, na.rm=T){
   media = mean(x, na.rm = na.rm)
-  sigma = sd(x, na.rm = na.rm)
+  q1 = quantile(x, 0.05, na.rm = na.rm)
+  q3 = quantile(x, 0.95, na.rm = na.rm)
+  iqr = IQR(x, na.rm=na.rm)
   
-  LimInf = media - 3*sigma
-  LimSup = media + 3*sigma
-  n_dentro = length(which(x > LimInf | x < LimSup))
+  LimInf = q1 - 1.5*iqr
+  LimSup = q3 + 1.5*iqr
   
+  nOut = length(which(x < LimInf | x > LimSup))
   max_fuera = max(x[which(x < LimInf)])
+  min_dentro = min(x[which(x > LimInf)])
   max_dentro = max(x[which(x < LimSup)])
   min_fuera = min(x[which(x > LimSup)])
-  min_dentro = min(x[which(x > LimInf)])
+  perc_out = nOut/length(x)
   
-  perc_dentro = n_dentro/length(x)
+  resultado = cbind(media, nOut, LimInf, LimSup, max_fuera, max_dentro, min_fuera, min_dentro, perc_out)
+  rownames(resultado) = NULL
   
-  vec_info = cbind(media, n_dentro, LimInf, LimSup, max_fuera, max_dentro, min_fuera, min_dentro, perc_dentro)
-  rownames(vec_info) = NULL
-  
-  return (vec_info)
+  return (resultado)
 }
 ```
 
@@ -327,7 +332,7 @@ outliers_calle <- data.frame()
 
 for (calle in l_calles){
   datos_calle <- df %>% subset(Nombre_calle == calle)
-  result <- VecTresSigma(datos_calle$valor)
+  result <- VecPercentil(datos_calle$valor)
   outliers_calle <- rbind(outliers_calle, c(calle,sum(result)))
   
   print(sum(result))
@@ -342,21 +347,21 @@ outliers_calle %<>% mutate(número_outliers = as.numeric(número_outliers))
 ggplot(outliers_calle, aes(calle,número_outliers,fill="lightcyan2")) +  
   geom_bar(stat="identity", position="stack") + 
   theme(axis.text.x = element_text(angle = 20, size = 6,hjust = 1, vjust = 1), legend.position = 'none') +
-  labs(title = "Outliers", y = "", x = "Calle", subtitle = "Número de outliers en función de la calle según la regla del 3 sigma")
+  labs(title = "Outliers", y = "", x = "Calle", subtitle = "Número de outliers en función de la calle según la regla del percentil")
 ```
 
 También podemos representar todos los datos en función de su calle, representando quales son los límites superiores he inferiores que estipula el método de detección.
 ```{r}
-sol_sigma <- TresSigma(df$valor)
+sol_perc <- Percentil(df$valor)
 
 #Mediante diagrama de violin.
 ggplot(df, aes(Nombre_calle, valor, fill = Nombre_calle)) +  
   geom_violin() + 
   coord_flip() + 
   theme(axis.text = element_text(size = 7)) + 
-  geom_hline(yintercept = sol_sigma[3], col = "red") + 
-  geom_hline(yintercept = sol_sigma[4], col = "blue") + 
-  geom_hline(yintercept = sol_sigma[1], col = "green", linetype = 2)  +
+  geom_hline(yintercept = sol_perc[3], col = "red") + 
+  geom_hline(yintercept = sol_perc[4], col = "blue") + 
+  geom_hline(yintercept = sol_perc[1], col = "green", linetype = 2)  +
   theme_bw() +
   theme(legend.position='none') +
   labs(x = "", y = "", title = "Nivel de sonido en las calles", subtitle = "Nivel de sonido en función de las calles y donde marcamos la línea de los outliers")
