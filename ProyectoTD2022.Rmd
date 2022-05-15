@@ -339,11 +339,10 @@ colnames(outliers_calle) = c("calle", "número_outliers")
 outliers_calle %<>% mutate(número_outliers = as.numeric(número_outliers))
 
 #Podemos representar el número de outliers por calle mediante un diagrama de barras.
-ggplot(outliers_calle, aes(calle,número_outliers)) +  
-  geom_point() + 
-  theme(axis.text.x = element_text(angle = 20, size = 6,hjust = 1, vjust = 1)) +
+ggplot(outliers_calle, aes(calle,número_outliers,fill="lightcyan2")) +  
+  geom_bar(stat="identity", position="stack") + 
+  theme(axis.text.x = element_text(angle = 20, size = 6,hjust = 1, vjust = 1), legend.position = 'none') +
   labs(title = "Outliers", y = "", x = "Calle", subtitle = "Número de outliers en función de la calle según la regla del 3 sigma")
-
 ```
 
 También podemos representar todos los datos en función de su calle, representando quales son los límites superiores he inferiores que estipula el método de detección.
