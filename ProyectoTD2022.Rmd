@@ -334,9 +334,6 @@ for (calle in l_calles){
   datos_calle <- df %>% subset(Nombre_calle == calle)
   result <- VecPercentil(datos_calle$valor)
   outliers_calle <- rbind(outliers_calle, c(calle,sum(result)))
-  
-  print(sum(result))
-  print(calle)
 }
 
 colnames(outliers_calle) = c("calle", "número_outliers")
@@ -344,7 +341,7 @@ colnames(outliers_calle) = c("calle", "número_outliers")
 outliers_calle %<>% mutate(número_outliers = as.numeric(número_outliers))
 
 #Podemos representar el número de outliers por calle mediante un diagrama de barras.
-ggplot(outliers_calle, aes(calle,número_outliers,fill="lightcyan2")) +  
+ggplot(outliers_calle, aes(calle,número_outliers,fill="lightcyan2", colour="blue")) +  
   geom_bar(stat="identity", position="stack") + 
   theme(axis.text.x = element_text(angle = 20, size = 6,hjust = 1, vjust = 1), legend.position = 'none') +
   labs(title = "Outliers", y = "", x = "Calle", subtitle = "Número de outliers en función de la calle según la regla del percentil")
