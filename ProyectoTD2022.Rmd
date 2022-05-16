@@ -13,7 +13,7 @@ output:
 Cargamos las librerias necesarias.
 ```{r include = F, echo=F}
 #Cargamos todas las librerias necesarias para trabajar.
-packages=c("tidyverse", "knitr", "ggplot2", "datasets", "RColorBrewer", "dplyr", "readr", "tidyr","lubridate","gganimate","plotly","png","ggpubr","colorspace","magrittr","car","GGally","jsonlite", "reshape","stats")
+packages=c("tidyverse", "knitr", "ggplot2", "datasets", "RColorBrewer", "dplyr", "readr", "tidyr","lubridate","gganimate","plotly","png","ggpubr","colorspace","magrittr","car","GGally","jsonlite", "reshape","stats","vcd")
 
 # use this function to check if each package is on the local machine
 # if a package is installed, it will be loaded
@@ -645,6 +645,8 @@ df_compweath <- merge(df_simp, df_weather, by = "Dia_medicion", all = TRUE)
 
 #Eliminamos todas las filas que contengan valores perdidos.
 df_compweath <- df_compweath[!is.na(df_compweath$valor),]
+df_compweath <- df_compweath[!is.na(df_compweath$prec),]
+df_compweath <- df_compweath[!is.na(df_compweath$velmedia),]
 
 #Finalmente, cambio todos los elementos numéricos de "character" a "numeric".
 df_compweath <- select(cbind(df_compweath,
@@ -658,6 +660,9 @@ head(df_compweath)
 
 Como se puede observar, hemos mantenido la fecha de recogido de los datos así como la temperatura, velocidad del viento y precipitación media de ese día. Además hemos añadido una columna con el ruido medio recogido por todos nuestros sensores ese mismo día.
 
+```{r}
+chisq.test(df_compweath$valor, df_compweath$precipit)
+```
 
 # Conclusiones
 
