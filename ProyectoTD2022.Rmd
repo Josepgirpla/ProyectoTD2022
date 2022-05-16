@@ -229,6 +229,8 @@ head(df_weather)
 
 ## Preguntas a reponder en el proyecto
 
+Para empezar a desarroyar el proyecto, vamos a formular una serie de preguntas que buscaremos responder mediante la interpretación de los datos aportados.
+
   1. ¿Cuáles son las calles mas ruidosas en cada momento del día?¿Existen diferencias entre los fines de semana y el resto de días?
   
   *Respuesta*
