@@ -625,6 +625,38 @@ grafico = total %>%
   labs(y = "Decibelios", x = "Fecha", title = "Progresión del sonido a lo largo del tiempo", subtitle = "Como evolucvionan las distintas medidas\ndel tiempo en función de la fecha")
 ggplotly(grafico,height = 500, width=800)
 ```
+Por último vamos a utilizar los datos meteorológicos adicionales importado anteriormente para comprovar si factores climatológicos como la lluvia o el viento pueden afectar a los sensores de ruido. Primero hemos de adaptar esos datos a nuestras necesidades eliminando los registros con valores perdidos y relacionando los datos meteorológicos con los obtenidos con los sensores. Así quedan una vez tratados:
+
+```{r}
+#Seleccionamos las columanas que nos interesan.
+df_weather %<>% select(fecha, tmed, prec, velmedia)
+
+#Cambio la clase de la columna fecha de "character a "date" y cambio su nombre a Dia_medicion para que coincida con la del dataframe df.
+df_weather <- select(cbind(df_weather, Dia_medicion = as.Date(df_weather$fecha)), -fecha)
+
+#Selecciono del dataframe df las filas que contienen el "Nivel_sonoro_continuo_equivalente" que es el dato que vamos a utilizar y nos quedamos solo con las variables "Dia_medicion" y "Valor"
+df_simp <- df[df$tipo_medida == "Nivel_sonoro_continuo_equivalente", c("Dia_medicion", "valor")]
+
+#Ahora calculamos la média diaria de ruido que será el valor que utilizaremos para comparar con la meteorología.
+df_simp <- group_by(df_simp, Dia_medicion) %>% summarize(Dia_medicion = Dia_medicion, valor = mean(valor, na.rm=TRUE)) %>% distinct()
+
+#Unimos ambos dataframes en uno solo por "Dia_medicion"
+df_compweath <- merge(df_simp, df_weather, by = "Dia_medicion", all = TRUE)
+
+#Eliminamos todas las filas que contengan valores perdidos.
+df_compweath <- df_compweath[!is.na(df_compweath$valor),]
+
+#Finalmente, cambio todos los elementos numéricos de "character" a "numeric".
+df_compweath <- select(cbind(df_compweath,
+              Temp_media = as.numeric(sub(",", ".", df_compweath$tmed)),
+              precipit = as.numeric(sub(",", ".", df_compweath$prec)),
+              vel_media = as.numeric(sub(",", ".", df_compweath$velmedia))),
+       -tmed, -prec, -velmedia)
+
+head(df_compweath)
+```
+
+Como se puede observar, hemos mantenido la fecha de recogido de los datos así como la temperatura, velocidad del viento y precipitación media de ese día. Además hemos añadido una columna con el ruido medio recogido por todos nuestros sensores ese mismo día.
 
 
 # Conclusiones
