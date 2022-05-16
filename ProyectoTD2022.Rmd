@@ -231,19 +231,19 @@ head(df_weather)
 
 Para empezar a desarroyar el proyecto, vamos a formular una serie de preguntas que buscaremos responder mediante la interpretación de los datos aportados.
 
-  1. ¿Cuáles son las calles mas ruidosas en cada momento del día?¿Existen diferencias entre los fines de semana y el resto de días?
+###  1. ¿Cuáles son las calles mas ruidosas en cada momento del día?¿Existen diferencias entre los fines de semana y el resto de días?
   
   *Respuesta*
   
   Si nos centramos en las diferencias que existen en los niveles de contaminación acústica entre los fines de semana y el resto de la semana nos damos cuenta rapidamente de que desde los jueves por la tarde hasta los domingos de madrugada los niveles sonoros aumentan considerablemente superando con creces los límites legales que la Ley 7/2002, de 3 de diciembre, de protección contra la contaminación acústica establece como límites legales.
   
-  2. ¿En algún momento el barrio de Ruzafa supera los estándares impuestos en la ley estatal de ruido?
+###  2. ¿En algún momento el barrio de Ruzafa supera los estándares impuestos en la ley estatal de ruido?
   
   *Respuesta*
   
   Si, como más adelante explicaremos con los gráficos realizados durante el estudio de contaminación acústica en el barrio de Ruzafa y con los datos observados y comparando los niveles sonoros con los establecidos en la ley de contaminación acústica podemos afirmar que el barrio de Ruzafa esta por encima de los estándares en todas las horas del día durante todos los días de la semana. 
   
-  3. ¿Podemos determinar horarios o patrones de ruido en los datos recogidos por los sensores?
+###  3. ¿Podemos determinar horarios o patrones de ruido en los datos recogidos por los sensores?
   
   *Respuesta*
   
@@ -251,7 +251,7 @@ Para empezar a desarroyar el proyecto, vamos a formular una serie de preguntas q
 
 Haciendo un breve resumen hemos encontrado un patron que se repite a lo largo de todas las semanas, durante los lunes, martes y miércoles tenemos los registros más bajos en cunto a decibelios, pero a medida que se acerca el jueves y el fin de semana los niveles registrados por los sonómetros se disparan.
   
-  4. ¿Existe alguna relación entre los días festivos en la ciudad y un cambio en la tendencia de los datos recogidos?
+###  4. ¿Existe alguna relación entre los días festivos en la ciudad y un cambio en la tendencia de los datos recogidos?
   
   *Respuesta*
   
@@ -263,7 +263,7 @@ Haciendo un breve resumen hemos encontrado un patron que se repite a lo largo de
   
   Por tanto podemos concluir que nuestra hipotesis inicial no era correcta.
   
-  5. ¿Podemos tratar de deducir el provocante de un ruido anormal a partir de la posición de un sensor?
+###  5. ¿Podemos tratar de deducir el provocante de un ruido anormal a partir de la posición de un sensor?
   
   *Respuesta*
   
@@ -271,11 +271,22 @@ Haciendo un breve resumen hemos encontrado un patron que se repite a lo largo de
 
 Si quisieramos saber quien es el causante de un ruido excesivamente alto, necesitariamos ubicar los sonómetros en lugares muy específicos y hacer análisis de cada sonómetro en cocnreto. Así de este modo con el sonómetro colocado en una ubicación muy concreta y realizando un estudio sobre los datos recogidos por el sonómetro tal vez podríamos hacernos una idea de quien o que son los causantes de los registros anormales. E incluso así creemos que influyen demasiadas variables como para saber que causa un sonido anormal recogiendo solo el nivel de db emitido.
   
-  6. Con los datos proporcionados, ¿Es posible realizar un mapa de ruido?
+###  6. Con los datos proporcionados, ¿Es posible realizar un mapa de ruido?
 
   *Respuesta*
   
   Si es posible realizar un mapa de ruido del barrio de Ruzafa a partir de los datos obtenidos, más adelante encontraremos dicho mapa.
+  
+###  7. ¿Influyen los fenómenos meteorológicos en la recogida de los datos por los sensores?
+  
+  *Respuesta*
+  
+  Hemos querido comprovar si los distintos fenómenos meteorológicos, como son el viento y la lluvia, son capaces de alterar los datos recogidos por los sensores.
+  
+  Gracias a la iniciativa AEMET OpenData, que proporciona de forma gratuita un registro meteorológico completo de todos los datos recogidos por la Agencia Estatal de Meteorología en formato JSON, hemos podido importar los datos necesarios para responder a esta pregunta.
+  
+  Tras un proceso de importación y depuración hemos podido comprovar que nuestra hipótesis no era correcta dado que no existe relación entre el nivel de ruido y los fenómenos meteorológicos, al menos así lo reflejan los datos que tenemos a nuestra disposición.
+
 
 # Acondicionamiento de los datos para que se correspondan con un tidy dataset.
 
