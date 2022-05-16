@@ -13,7 +13,7 @@ output:
 Cargamos las librerias necesarias.
 ```{r include = F, echo=F}
 #Cargamos todas las librerias necesarias para trabajar.
-packages=c("tidyverse", "knitr", "ggplot2", "datasets", "RColorBrewer", "dplyr", "readr", "tidyr","lubridate","gganimate","plotly","png","ggpubr","colorspace","magrittr","car","GGally","jsonlite")
+packages=c("tidyverse", "knitr", "ggplot2", "datasets", "RColorBrewer", "dplyr", "readr", "tidyr","lubridate","gganimate","plotly","png","ggpubr","colorspace","magrittr","car","GGally","jsonlite", "reshape")
 
 # use this function to check if each package is on the local machine
 # if a package is installed, it will be loaded
@@ -34,8 +34,6 @@ Limpiamos el entorno de trabajo antes de comenzar a trabajar.
 ```{r}
 rm(list = ls())
 ```
-
-# Contactar con los compañeros de grupo
 
 # Crear el repositorio ProyectoTD2022
 El repositorio se encunetra en el siguinete enlace: https://github.com/Josepgirpla/ProyectoTD2022.git
@@ -206,6 +204,27 @@ for (n in as.factor(colnames(df))){
 }
 
 df %>% head() %>% kable()
+```
+# Importación de datos complementarios
+Para contestar una de las preguntas que hemos planteado requerimos de datos adicionales. Los datos que vamos a importar son un registro meteorológico de la ciudad de Valencia entre los años 2020 y 2022 recogidos por la Agencia Estatal de Meteorología (AEMET) y que se han puesto a disposición de todo el mundo a traves de la iniciativa "AEMET OpenData".
+
+La descarga de los datos requiere de una solicitud previa que requiere de un código de usuario proporcionado por la propia AEMET, además, la descarga de los datos tiene una caducidad y es por ello que no es posible dejar un enlace fijo en el código para ir actualizando los datos. Es por ello que hemos tenido que descargar previamente los datos.
+
+Los datos se proporcionan en formato JSON y requieren de cierto tratamiento que seguidamente haremos para poder utilizarse.
+
+```{r}
+#Guardado de los datos desde un enlace de AEMET (Cada vez que se quiera actualizar los datos es necesario iniciar sesión dado que el enlace tiene un tiempo de expiración
+
+#filename <- "https://opendata.aemet.es/opendata/sh/62606870"
+#weather_data <- read_file(filename)
+#write_json(weather_data, "data/Weather_data.json")
+```
+
+Estos son los datos tal y como se nos proporcionan:
+```{r}
+#Importamos los datos que hemos descargado en formato .json a un data frame.
+df_weather <- fromJSON("data/Weather_data.json")
+head(df_weather)
 ```
 
 ## Preguntas a reponder en el proyecto
@@ -572,7 +591,7 @@ Este tipo de representaciones o mapas son muy útiles para determinar el grado d
 Segun la tabla 1 del anexo II del BOE del 23 de enero del año 2020 (https://www.boe.es/boe/dias/2020/01/23/pdfs/BOE-A-2020-1010.pdf)
 el sonido máximo permitido es de 55dB en zonas residenciales y 65 en terciarias(durante el día), dado que ne ruzafa hay ambas mostraremos las dos. Para la noche los niveles máximos son 45dB en zonas residenciales y 45 en terciarias.
 
-Tmbién podemos ver que la OMS considera ruido todo aquello que supere los 65 db durante el día y los 55 durante la noche como vemos en este artículo de El Pais(https://elpais.com/elpais/2019/01/14/seres_urbanos/1547477803_448315.html#:~:text=La%20OMS%20considera%20ruido%20cualquier,exceder%20de%20los%2045%20decibelios.)
+También podemos ver que la OMS considera ruido todo aquello que supere los 65 db durante el día y los 55 durante la noche como vemos en este artículo de El Pais(https://elpais.com/elpais/2019/01/14/seres_urbanos/1547477803_448315.html#:~:text=La%20OMS%20considera%20ruido%20cualquier,exceder%20de%20los%2045%20decibelios.)
 
 
 ```{r}
