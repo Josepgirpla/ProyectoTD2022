@@ -613,7 +613,7 @@ total %>% filter(tipo_medida == "Nivel_sonoro_noche") %>% ggplot(aes(x = valor))
   geom_text(aes(60.5,-10,label = "Terciario y OMS")) +
   labs(x = "Decibelios", y = "", title = "Nivel sonoro máximo", subtitle = "Nivel sonoro máximo durante la noche segun la legislación en función de si es zona residencial o terciaria")
 ```
-Por último vamos a observar como ha evolucinado el sonido a lo largo del tiempo, tando del día como de la tarde y la noche.
+Otra aplicación que le podemos dar a los datos es la de la representación  gráfica de la evolución del sonido a lo largo del tiempo, tando del día como de la tarde y la noche.
 
 ```{r}
 grafico = total %>% 
@@ -660,22 +660,20 @@ head(df_compweath)
 
 Como se puede observar, hemos mantenido la fecha de recogido de los datos así como la temperatura, velocidad del viento y precipitación media de ese día. Además hemos añadido una columna con el ruido medio recogido por todos nuestros sensores ese mismo día.
 
-Vamos a comparar los datos:
+Ya con nuestros datos preparados vamos a realizar un análisis de la correlación entre las distintas variables con respecto a los valores de ruido medio.
 ```{r}
-#Chi cuadrado
-chisq.test(df_compweath$valor, df_compweath$precipit)
 
-#V de Cramer
-assocstats(as.matrix(select(df_compweath, valor, precipit)))
+df_compweath %>% select(valor,precipit,vel_media) %>% ggpairs(aes(color="",alpha = 0.5))
 
 ```
+Como podemos observar tanto en las representaciones gráficas como en los índices, no existe correlación entre las variables y por tanto nuestra hipótesis de que la meteorología puede alterar los niveles de ruido queda descartada a falta de un estudio mas exhaustivo.
 
 # Conclusiones
 
-Para finalizar el estudio de los datos recogidos por los sonómetros en el barrio de ruzafa vamos a las conslusiones a las que hemos llegado.
+Para finalizar el estudio de los datos recogidos por los sonómetros en el barrio de Ruzafa vamos a las conslusiones a las que hemos llegado.
 
-Al ser un estudio realizado sobre los niveles de ruido, centraremos estas conclusiones haciendo referencia a la contaminación acústica que existe en el barrio de Ruzafa. Como ya hemos ido exponiendo a lo largo de nuestro estudio, encontramos que los niveles sonoros en eñ barrio de Ruzafa son excesivos (superando los niveles legales) y por tanto creemos que es necesario algún tipo de medida anticontaminación acustica por parte del ayuntamiento de valencia que fomente un menor nivel de ruido en las calles.
+Al ser un estudio realizado sobre los niveles de ruido, centraremos estas conclusiones haciendo referencia a la contaminación acústica que existe en el barrio de Ruzafa. Como ya hemos ido exponiendo a lo largo de nuestro estudio, encontramos que los niveles sonoros en el barrio de Ruzafa son excesivos (superando los niveles legales) y por tanto creemos que es necesaria una serie de medida que busquen mitigar la contaminación acustica por parte del ayuntamiento de Valencia, que fomente un menor nivel de ruido en las calles con el fin de mejorar la calidad de vida de los vecinos.
 
-Otra de las conclusiones que hemos obtenido del estudio de los datos recogidos es que podemos afirmar que el barrio de Ruzafa es un barrio que tiene por actividades principales la hostelería y el ocio nocturno, ya que fijandonos en como evoluciónan los registros de los sonómetros nos damos cuenta de que aumentan mucho cuando se acerca el fin de semana. De este mismo el estudio nos lleva a pensar que el barrio está frecuentado mayormente por jóvenes, no obstante esto no indica que estos mismos jóvenes residan en el barrio, pero si es el perfil de persona que encontraremos frecuentemente allí debido a que es un barrio como hemos dicho antes con gran cantidad de negocios, muchos ellos del sector hostelería.
+Otra de las conclusiones que hemos obtenido del estudio de los datos recogidos es que podemos afirmar que el barrio de Ruzafa es un barrio que tiene por actividades principales la hostelería y el ocio nocturno, ya que fijandonos en como evoluciónan los registros de los sonómetros nos damos cuenta de que aumentan mucho cuando se acerca el fin de semana. De este mismo el estudio nos lleva a pensar que el barrio está frecuentado mayormente por jóvenes, no obstante esto no indica que estos mismos jóvenes residan en el barrio, pero si es el perfil de persona que encontraremos frecuentemente allí debido a que es un barrio, como hemos dicho antes, con gran cantidad de negocios, muchos ellos del sector hostelero.
 
 Una cosa curiosa que nos ha llevado a concluir el estudio y que no esperábamos es que en los meses en que encontramos las fiestas más grandes, encontramos los niveles más bajos de decibelios registrados por los sensores. Por supuesto cabe destacar que esto no es así para el mes de marzo, como es obvio debido a que en él se celebra la fiesta más importante de Valencia, las Fallas.
