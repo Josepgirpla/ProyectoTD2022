@@ -660,8 +660,14 @@ head(df_compweath)
 
 Como se puede observar, hemos mantenido la fecha de recogido de los datos así como la temperatura, velocidad del viento y precipitación media de ese día. Además hemos añadido una columna con el ruido medio recogido por todos nuestros sensores ese mismo día.
 
+Vamos a comparar los datos:
 ```{r}
+#Chi cuadrado
 chisq.test(df_compweath$valor, df_compweath$precipit)
+
+#V de Cramer
+assocstats(as.matrix(select(df_compweath, valor, precipit)))
+
 ```
 
 # Conclusiones
